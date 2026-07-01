@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    {% load static %}
+    {% block head %}
+    <meta charset="utf-8">
+
+    <title>TPP</title>
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+    <meta name="author" content="Milos User">
+    <meta name="keywords" content="SEM, Django, Python, WebApp">
+    <meta name="description" content="Creating a application using Python-Django">
+    <!-- <meta http-equiv="refresh" content="240"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- <script type="text/javascript" src="{% static 'weblog_app/livesearch.js' %}"></script> -->
+    <!-- <style type="text/css">
+                #livesearch
+                {
+                    margin: 0px;
+                    width: 194px;
+                    background-color: white;
+                    color: black;
+                    position: absolute;
+                    
+                }
+                #txt1
+                {
+                    margin: 0px;
+                    /* color: red; */
+                }
+               
+        </style> -->
+
+
+    {% endblock %}
+</head>
+<body>
+  <style>
+    /* css reset */
+  
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    
+    .section {
+      flex: 1 0 50%;
+      height: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .button-container {
+
+      position: absolute;
+
+      top: 50%;
+
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+
+      width: 15%;
+
+      height: 18%;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      text-align: center;
+
+      color: white;
+
+      text-decoration: none;
+
+      background-color: rgba(0, 0, 0, 0.5);
+
+      border-radius: 5px;
+
+    }
+
+.name-container {
+
+              position: absolute;
+
+              top: 5%;
+
+              left: 50%;
+
+              transform: translate(-50%, -50%);
+
+              width: 85%;
+
+              height: 10%;
+
+              display: flex;
+
+              justify-content: center;
+
+              align-items: center;
+
+              text-align: center;
+
+              color: white;
+
+              text-decoration: none;
+
+              font-size: 30px;
+
+              /* background-color: rgba(0, 0, 0, 0.5);
+
+              border-radius: 5px; */
+
+}
+
+    .button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%;
+      height: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      text-decoration: none;
+    }
+    
+    .button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .button h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+  </style>
+
+    <!-- EMS -->
+    <div class="section" style="background-image: url('{% static "img/slider.jpg" %}'); ">
+      <div class="content">
+        <h1 class="center" style="text-align:center; color: antiquewhite; font-size: 1.8em; font-weight: bold;">EMS</h1>
+        <p class="center" style="text-align:center; color: antiquewhite; font-size: 1.8em; font-weight: bold;">VPN/PROD, Pripojenie k billien db a dwh </p>
+        <a href="{% url 'work:home_ems' %}" class="button center"></a>
+      </div>
+    </div>
+  
+    <!-- EETS EMS -->
+      <div class="section" style="background-image: url('{% static "img/eets.jpg" %}'); ">
+        <div class="content">
+          <h1 class="center" style="text-align:center; color: antiquewhite; font-size: 1.8em; font-weight: bold;">EETS EMS</h1>
+          <p class="center" style="text-align:center; color: antiquewhite; font-size: 1.8em; font-weight: bold;">VPN/EETS, Pripojenie k db </p>
+          <a href="{% url 'eets:eets' %}" class="button center"></a>
+        </div>
+      </div>
+    
+  <!-- EDZ -->
+  <div class="section" style="background-image: url('{% static "img/edz_full.jpg" %}'); height: 300px;">
+    <div class="content">
+      <br><br><br>
+      <!-- <h1 class="center" style="text-align:center">EDZ</h1> -->
+      <p class="center" style="text-align:center; color: #386dab; font-size: 1.8em; font-weight: bold; margin-top: 120px;">VPN/EDZ, Pripojenie k billien db</p> 
+      <a href="{% url 'edz:edz' %}" class="button center"></a>
+    </div>
+  </div>
+
+  <!-- SEM -->
+  <div class="section" style="background-image: url('{% static "img/myto-full.jpg" %}'); ">
+    <div class="content">
+      <h1 class="center" style="text-align:center; color: #303880; font-size: 1.8em; font-weight: bold;">SEM</h1>
+      <p class="center" style="color: #303880; font-size: 1.8em; font-weight: bold;">Pripojenie k cis db a dwh --NEFUNKCNE !!!</p>
+      <a href="{% url 'work:home' %}" class="button center"></a>
+    </div>
+  </div>
+
+
+
+  <div class="name-container">
+      <h1 style="font-size: 30px; margin-top: 0px;">Tracking Projects Pulse (TPP)</h1>
+  </div>
+
+      
+
+  <div class="button-container">
+    <a href="{% url 'work:hpsm_i' %}" class="button">
+      <h1>HPSM XOSA_APP</h1>
+    </a>
+  </div>
+</body>
+
+
+
+</html>

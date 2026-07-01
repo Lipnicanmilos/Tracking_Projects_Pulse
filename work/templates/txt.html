@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="landing-page">
+            <div class="col-12 col-lg-8">
+              <div class="row">
+             <p id="text" >{{ file_content | linebreaks }} </p>
+             </div>
+            </div>
+        </div>
+    </div>
+<script>
+    function search(e) {
+	let searched = document.getElementById("search").value.trim();
+  if (searched !== "") {
+  	let text = document.getElementById("text").innerHTML;
+  	let re = new RegExp(searched,"g"); // search for all instances
+		let newText = text.replace(re, `<mark>${searched}</mark>`);
+		document.getElementById("text").innerHTML = newText;
+  }
+}
+</script>
+    
+</body>
+</html>

@@ -1,0 +1,44 @@
+import os
+from office365.sharepoint.client_context import ClientContext
+from office365.runtime.auth.user_credential import UserCredential
+from office365.sharepoint.files.file import File
+
+def upload_file_to_sharepoint():
+    try:
+        # SharePoint site and credentials (z premenných prostredia)
+        site_url = os.environ.get("SHAREPOINT_SITE_URL", "https://example.sharepoint.com/teams/example-team")
+        username = os.environ.get("SHAREPOINT_USERNAME", "")
+        password = os.environ.get("SHAREPOINT_PASSWORD", "")
+        relative_url = os.environ.get("SHAREPOINT_RELATIVE_URL", "/teams/example-team/Documents")
+
+        # Path to the file you want to upload
+        file_path = r"C:\Tracking_Projects_Pulse\Reports\EDZ\EDZ_Podania_122024_test.xlsx"
+
+        # Check if the file exists
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"The file at {file_path} was not found.")
+        print(f"Attempting to connect to SharePoint site: {site_url}")
+
+        # Authenticate with SharePoint
+        ctx = ClientContext(site_url).with_credentials(UserCredential(username, password))
+        print("Successfully authenticated with SharePoint.")
+
+        # Get the target folder
+        folder = ctx.web.get_folder_by_server_relative_url(relative_url)
+        ctx.load(folder)
+        ctx.execute_query()
+        print(f"Folder '{relative_url}' loaded successfully.")
+
+        # Upload the file
+        with open(file_path, 'rb') as content_file:
+            file_name = os.path.basename(file_path)
+            upload_result = folder.upload_file(file_name, content_file.read()).execute_query()
+        print(f"File '{upload_result.serverRelativeUrl}' uploaded successfully to SharePoint.")
+
+    except FileNotFoundError as fnf_error:
+        print(f"Error: {fnf_error}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
+if __name__ == "__main__":
+    upload_file_to_sharepoint()

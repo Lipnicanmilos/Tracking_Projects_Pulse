@@ -1,0 +1,96 @@
+{% extends "base_ems.html" %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+
+<!-- Optional custom styling -->
+<style>
+  .form-section {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 25px;
+    background-color: #f8f9fa;
+  }
+  .form-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+</style>
+
+<!-- Display flash messages -->
+<ul class="alert-list">
+  {% for message in messages %}
+    <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+
+<div class="container mt-4">
+
+  {% block content %}
+    <h1 class="mb-4">Marketing Email Management</h1>
+
+    <!-- Subject -->
+    <form method="post" class="form-section">
+      {% csrf_token %}
+      <h2>Edit Email Subject</h2>
+      <div class="mb-3">
+        <label for="head" class="form-label">Subject</label>
+        <input type="text" name="head" id="head" class="form-control" value="{{ head }}">
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+    <!-- Body -->
+    <form method="post" class="form-section">
+      {% csrf_token %}
+      <h2>Edit Email Body</h2>
+      <div class="mb-3">
+        <label for="body" class="form-label">
+          Body <i class="text-muted">(Use <code>\n</code> for new lines)</i>
+        </label>
+        <textarea name="body" id="body" class="form-control" rows="5">{{ body }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+    <!-- Emails -->
+    <div class="form-section">
+      <h2>Recipient Emails</h2>
+      {% if emails %}
+        <ul class="list-group mb-3">
+          {% for email in emails %}
+            <li class="list-group-item">{{ email }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No emails provided.</p>
+      {% endif %}
+    </div>
+
+    <!-- Edit Emails -->
+    <form method="post" class="form-section">
+      {% csrf_token %}
+      <h2>Edit Email List</h2>
+      <div class="mb-3">
+        <label for="emails" class="form-label">Emails (comma separated)</label>
+        <input type="text" name="emails" id="emails" class="form-control" value="{{ emails|join:', '|default:'' }}">
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+    <!-- Edit Run -->
+    <form method="post" class="form-section">
+      {% csrf_token %}
+      <h2>Edit Run Configuration</h2>
+      <div class="mb-3">
+        <label for="rune" class="form-label">Run</label>
+        <input type="text" name="rune" id="rune" class="form-control" value="{{ rune|default:'' }}">
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+  {% endblock %}
+
+</div>
+{% endblock %}

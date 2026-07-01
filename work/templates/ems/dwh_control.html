@@ -1,0 +1,342 @@
+{% extends "base_ems.html" %}
+
+{% block body %}
+<style>
+    #table-wrapper {
+      position:relative;
+      padding-bottom: 20px
+    }
+    #table-scroll {
+      max-height:283px;
+      min-height:50px;
+      overflow:scroll;  
+      margin-top:20px;
+    }
+    #table-wrapper table {
+      width:100%;
+    
+    }
+    #table-wrapper table * {
+      /*background:yellow;*/
+      color:black;
+    }
+    #table-wrapper table thead th .text {
+      position:absolute;   
+      top:-20px;
+      z-index:2;
+      height:20px;
+      width:35%;
+      border:1px solid red;
+    }
+    td, th {
+        padding: 0px;
+        min-width: 0px; 
+        }
+    </style>
+
+<div class="content" style="padding-left: 15px; padding-right: 15px;">
+
+ <h3>DWH (EMS --> DWH)</h3>
+
+ <div id="table-wrapper">
+    <div id="table-scroll">
+      <table class="table table-hover " style="  white-space: nowrap; border: ridge;">
+    <thead>
+      <td colspan = "4" style="text-align:left"> <b style="color: #337ab7;"> V_DWH_LOAD_STATUS <i style="color: #337ab7;">"select STEP, TO_CHAR(from_tz(CAST(STEP_DATE_TIME AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET', 'DD.MM.YYYY HH24:MI:SS') as STEP_DATE_TIME_CET
+        from BILLIEN_STA.v_dwh_load_status"</i></b></td>
+    <tr style="background-color: darkgrey;">
+        <th>	STEP		</th>
+        <th>	STEP_DATE_TIME_CET		</th>
+   
+    </tr></thead>
+    <tbody>
+      {% for row in dwh_logs %}
+    
+    <tr align="center">
+        <th>{{ row.STEP	}}</th>
+        <th>{{ row.STEP_DATE_TIME_CET}}</th>       
+      {% endfor %}
+    </tr>
+  
+  
+</tbody> 
+</table>
+
+</div>
+</div>
+
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7;float: left;">Detail of loading individual tables.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <div class="dropdown">
+      <button>Query</button>
+      <div class="dropdown-content"><p>
+        SELECT * FROM BILLIEN_STA.dwh_load_detail where LOAD_START > trunc(sysdate-3) order by LOAD_START desc
+      </p>
+    </div>
+  </div>
+    <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+      <thead>
+      <tr style="background-color: darkgrey; ">
+      <th>ID_DWH_LOAD_DETAIL</th>
+      <th>SOURCE_SYSTEM_NAME</th>
+      <th>LOAD_NUMBER</th>
+      <th>PARTITION_ID </th>
+      <th>LOAD_STAGE</th>
+      <th>STATUS</th>
+      <th>DATE_FROM_CET</th>
+      <th>DATE_TO_CET</th>
+      <th>LOAD_START_CET</th>
+      <th>LOAD_END_CET</th> 
+      <th>diff_minutes</th> 
+      <th>TABLE_NAME</th> 
+      <th>COMMAND</th> 
+
+    </tr></thead>
+    <tbody>
+      {% for row in dwh_detail %}
+    
+    <tr align="center">
+      <th>{{ row.ID_DWH_LOAD_DETAIL}}</th>    
+      <th>{{ row.SOURCE_SYSTEM_NAME}}</th>
+      <th>{{ row.LOAD_NUMBER}}</th>
+      <th>{{ row.PARTITION_ID}}</th>
+      <th>{{ row.LOAD_STAGE}}</th>
+      <th>{{ row.STATUS}}</th>
+      <th>{{ row.DATE_FROM_CET }}</th>
+      <th>{{ row.DATE_TO_CET }}</th>
+      <th>{{ row.LOAD_START_CET}}</th>
+      <th>{{ row.LOAD_END_CET}}</th>
+      <th>{{ row.DIFF_MINUTES}}</th>
+      <th>{{ row.TABLE_NAME}}</th>  
+      <th>{{ row.COMMAND}}</th>  
+      {% endfor %}
+    </tr>
+  
+  </tbody> 
+  </table>
+  </div>
+  <button id="createXLSX">Export XLSX</button>
+  </div>
+  
+
+
+  <!-- ------------------------------------------------------------------------------------------------------------------- -->
+
+  <div id="table-wrapper">
+    <div id="table-scroll">
+      <td colspan = "4"><b style="color: #337ab7;float: left;">DWH LOAD ERROR.</b></td>
+      <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_3" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+      <br>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT 
+                    ID_DWH_LOAD_ERROR,
+                    ID_DWH_LOAD_DETAIL,
+                    ERROR ,
+                    TO_CHAR(from_tz(CAST(CREATED_ON AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET', 'DD.MM.YYYY HH24:MI:SS') as CREATED_ON
+                    FROM BILLIEN_STA.dwh_load_error order by created_on desc
+        </p>
+      </div>
+    </div>
+      <table id="tab3" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey; ">
+        <th>ID_DWH_LOAD_ERROR</th>
+        <th>ID_DWH_LOAD_DETAIL</th>
+        <th>ERROR</th>
+        <th>CREATED_ON </th>
+ 
+      </tr></thead>
+      <tbody>
+        {% for row in dwh_error %}
+      
+      <tr align="center">
+        <th>{{ row.ID_DWH_LOAD_ERROR}}</th>    
+        <th>{{ row.ID_DWH_LOAD_DETAIL}}</th>
+        <th>{{ row.ERROR}}</th>
+        <th>{{ row.CREATED_ON}}</th>
+ 
+        {% endfor %}
+      </tr>
+    
+    </tbody> 
+    </table>
+  </div>
+  <button id="createXLSX_3">Export XLSX</button>
+  </div>
+    
+
+    <div id="table-wrapper">
+      <div id="table-scroll">
+        <td colspan = "4"><b style="color: #337ab7;float: left;">All tables and their last loading.</b></td>
+        <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+        <br>
+        <div class="dropdown">
+          <button>Query</button>
+          <div class="dropdown-content"><p>
+            SELECT ext.*, CAST(FROM_TZ(CAST(LAST_RUN AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as LAST_RUN_CET  FROM BILLIEN_STA.DWH_EXPORT_TABLE ext
+          </p>
+        </div>
+      </div>
+      <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey; ">
+          <th>LAST_LOAD_NUMBER</th> 
+          <th>SOURCE_SYSTEM_NAME</th> 
+          <th>TABLE_NAME</th> 
+          <th>STA_TABLE_NAME</th> 
+          <th>STA_TABLE_SYNONYM</th> 
+          <th>PRIORITY</th> 
+          <th>LAST_RUN</th> 
+          <th>LAST_RUN_CET</th> 
+          <th>LAST_CHANGE_COLUMN_IN_TABLE</th> 
+          <th>NEXT_ALLOWED_DATE</th> 
+   
+        </tr></thead>
+        <tbody>
+          {% for row in dwh_tables %}
+        
+        <tr align="center">
+          <th>{{ row.LAST_LOAD_NUMBER}}</th>    
+          <th>{{ row.SOURCE_SYSTEM_NAME}}</th>
+          <th>{{ row.TABLE_NAME}}</th>
+          <th>{{ row.STA_TABLE_NAME}}</th>
+          <th>{{ row.STA_TABLE_SYNONYM}}</th>
+          <th>{{ row.PRIORITY}}</th>
+          <th>{{ row.LAST_RUN}}</th>
+          <th>{{ row.LAST_RUN_CET}}</th>
+          <th>{{ row.LAST_CHANGE_COLUMN_IN_TABLE}}</th>
+          <th>{{ row.NEXT_ALLOWED_DATE}}</th>
+
+
+   
+          {% endfor %}
+        </tr>
+      
+      </tbody> 
+      </table>
+    </div>
+    <button id="createXLSX_2">Export XLSX</button>
+    </div>
+
+
+    <div id="table-wrapper">
+      <div id="table-scroll">
+        <td colspan = "4"><b style="color: #337ab7;float: left;">DWH LOAD MERGE TABLE.</b></td>
+        <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_3" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+        <br>
+        <div class="dropdown">
+          <button>Query</button>
+          <div class="dropdown-content"><p>
+            select 
+            LOAD_NUMBER,	SOURCE_SYSTEM_NAME,	PARTITION_ID,	IS_MERGED_FLAG,	MERGE_FINISHED_DATETIME,	IS_PREPARED_TO_MERGE,	
+            IS_EXPORT_RUNNING_FLAG,	LAST_RUN_ERROR_MESSAGE
+            from BILLIEN_STA.dwh_merge_table
+            order by LOAD_NUMBER desc
+          </p>
+        </div>
+      </div>
+        <table id="tab3" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+          <thead>
+          <tr style="background-color: darkgrey; ">
+          <th>LOAD_NUMBER</th>
+          <th>SOURCE_SYSTEM_NAME</th>
+          <th>PARTITION_ID</th>
+          <th>IS_MERGED_FLAG </th>
+          <th>MERGE_FINISHED_DATETIME </th>
+          <th>IS_PREPARED_TO_MERGE </th>
+          <th>IS_EXPORT_RUNNING_FLAG </th>
+          <th>LAST_RUN_ERROR_MESSAGE </th>
+
+   
+        </tr></thead>
+        <tbody>
+          {% for row in dwh_merge %}
+        
+        <tr align="center"> 
+          <th>{{ row.LOAD_NUMBER}}</th>
+          <th>{{ row.SOURCE_SYSTEM_NAME}}</th>
+          <th>{{ row.PARTITION_ID}}</th>
+          <th>{{ row.IS_MERGED_FLAG}} </th>
+          <th>{{ row.MERGE_FINISHED_DATETIME}} </th>
+          <th>{{ row.IS_PREPARED_TO_MERGE}} </th>
+          <th>{{ row.IS_EXPORT_RUNNING_FLAG}} </th>
+          <th>{{ row.LAST_RUN_ERROR_MESSAGE}} </th>
+   
+          {% endfor %}
+        </tr>
+      
+      </tbody> 
+      </table>
+    </div>
+    <button id="createXLSX_3">Export XLSX</button>
+    </div>
+      
+      
+    </div>
+
+<script type="text/javascript">
+  $('#picker').datetimepicker({
+format: 'DD-MM-YYYY HH:mm:ss'
+ });
+ $('#picker2').datetimepicker({
+   format: 'DD-MM-YYYY HH:mm:ss'
+ });
+</script>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_3").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab3 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+// export excel 
+var btn = document.getElementById("createXLSX");
+var fileName = "export_detail";
+var fileType = "xlsx";
+btn.addEventListener("click", function() {
+var table = document.getElementById("tab1");
+var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+});
+
+var btn = document.getElementById("createXLSX_2");
+var fileName1 = "export_error";
+var fileType = "xlsx";
+btn.addEventListener("click", function() {
+var table = document.getElementById("tab2");
+var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+});
+
+var btn = document.getElementById("createXLSX_3");
+var fileName1 = "export_tables";
+var fileType = "xlsx";
+btn.addEventListener("click", function() {
+var table = document.getElementById("tab3");
+var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+});
+</script>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends "base_ems.html" %}
+
+{% block body %}
+{% load static %}
+
+<div class="content" style="padding-left: 15px; padding-right: 15px;">
+
+<h2 align="center">Validácia Billien PROD/TEST</h2>
+
+<hr>
+<H3><b> WIKI:</b> <a href="https://example.atlassian.net/wiki/spaces/SAS/pages/5672672/EMS+validacia+PREPROD">Wiki Validacia.</a> </H3>
+
+<h3> Priklad Jira: </h3>
+<p> <b> Nasadenie: </b>  <a href="https://example.atlassian.net/browse/EMSOD-210">JIRA EMS Prod nasadenie.</a></p>
+<p> <b> Validácia: </b> <a href="https://example.atlassian.net/browse/ICTAP-266">JIRA EMS Test validacia.</a>   <i> -- clone </i></p>
+{% comment %} <P><B> SEM TEST certificates </B><a href="{% static 'data/cert_test.zip' %}"> 9900xx.zip </a> <i> --heslo je nazov certifikatu</i></P> {% endcomment %}
+
+<hr>
+
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+      <td>Aplikacia</td>
+      <td>Prod</td>
+      <td>PreProd</td>
+      <td>Rola</td>
+      <td>Certifikát</td>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+      <td>EMS Back-office</td>
+      <td><a href="https://bobill.etc.example.sk">https://bobill.etc.example.sk</a></td>
+      <td><a href="https://bo.emyto-test.sk/">https://bo.emyto-test.sk/ </a></td>
+      <td>Manager</td>
+      <td>Certifikáty</td>
+  </tr>
+  <tr>
+      <td>EMS POS Zakaznicke miesto</td>
+      <td><a href="https://posbill.etc.example.sk" target="_blank">https://posbill.etc.example.sk</a></td>
+      <td><a href="https://pos.emyto-test.sk/logon/" target="_blank">https://pos.emyto-test.sk/logon/</a></td>
+      <td>BO Terminal CERT 1108900114 <br>
+        CC terminal 9203920319<br>
+        DP terminál 1300130001 1300 Bratislava-DČS Zlaté Piesky (SLOVNAFT, a.s.)|W130001<br>
+        OPC terminál|CWH01 92029202201<br>
+        BDP terminál: 7200 Vyšný Komárnik - Barwinek (PL) (example, a.s.)|W720001  7200720001<br><br>
+                
+        </td>
+      <td>Certifikáty
+        <a href="https://example.atlassian.net/wiki/spaces/SAS/pages/632258580/EMS+-+PreProd+-+rebuild">WIKI: TEST_CERT</a> 
+      </td>
+  </tr>
+  <tr>
+      <td>EMS FCI zona pre VPK</td>
+      <td><a href="https://fci.emsportal.etc.example.sk">https://fci.emsportal.etc.example.sk</a></td>
+      <td><a href="https://fci.emyto-test.sk/logon/">https://fci.emyto-test.sk/logon/</a></td>
+      <td>FCI Partner Operator</td>
+      <td>ST6.pfx<br> Test_cert: DKV</td>
+  </tr>
+  <tr>
+      <td>EMS Register priestupkov</td>
+      <td><a href="https://crbill.etc.example.sk">https://crbill.etc.example.sk</a></td>
+      <td></td>
+      <td>Case Operator</td>
+      <td>Certifikáty</td>
+  </tr>
+  <tr>
+      <td>EMS Zakaznicka zona</td>
+      <td><a href="https://www.emyto.sk/selfcare">https://www.emyto.sk/selfcare</a></td>
+      <td><a href="https://www.emyto-test.sk/selfcare/logon/">https://www.emyto-test.sk/selfcare/logon/</a></td>
+      <td>BEZ ROLE</td>
+      <td>BEZ CERTIFIKATU</td>
+    </tr>
+    </tbody> 
+</table>
+
+<hr>
+<hr>
+<h2>EMS PROD </h2>
+
+<h3>Pred nasadenim si stiahnem error logy. Netreba robim to zo zvyku.  <a href="https://example.atlassian.net/browse/EMSOD-243">Priklad EMSOD-243.</a><h3>
+<h3>SD odstavi mytomaty --netreba riesit, pripadne kontrola. <a href="https://kiosk.etc.example.sk/bem/index.php?page=konfiguracia/nastavenia_odstavky">https://kiosk.etc.example.sk/bem/index.php?page=konfiguracia/nastavenia_odstavky</a><h3>
+<img src="{% static 'img/kiosk.png' %}" alt="https://kiosk.etc.example.sk/bem/index.php?page=konfiguracia/nastavenia_odstavky" />
+<h3>Na zaciatku odstávkové stranky pre Billien EMS Selfcare + EMS POSy (SYS team) </h3>
+<img src="{% static 'img/sc.png' %}" alt="https://www.emyto.sk/selfcare" />
+
+<h3>Pri instalacii DB casti pravidelna chyba suvisiaca s DWH loadingom.</h3>
+<p>DB: instalacia DB RLS skoncila s chybami, vyzera ze su rovnake ako naposledy kvoli DWH loadingu.<br>
+  V alert logu produkcnej billdb sa pocas instalacie rls objavila chyba:<br>
+Errors in file /opt/oracle/database/diag/rdbms/billdb/billdb/trace/billdb_j000_8072.trc:<br>
+ORA-12012: error on auto execute of job "BILLIEN_BE"."CREATE_RTE_INDEXES"<br>
+ORA-06550: line 1, column 763:<br>
+PLS-00201: identifier 'MV_DS_TO_BE_PKG.CREATE_NEW_RTE_INDEXES' must be declared<br>
+ORA-06550: line 1, column 763:<br>
+PL/SQL: Statement ignored<br>
+tato chyba sa vsak vyskytuje vzdy pri instalacii release.
+</p>
+
+<h3>Validacia.</h3>
+
+<table class="table table-striped">
+    <thead>
+      <td colspan = "4"><b style="color: #337ab7;">I. BO</b></td>
+    <tr style="background-color: darkgrey;">
+      <th>#</th>
+      <th>Info</th>
+      <th>Action</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr align="center">
+      <th>1.</th>    
+      <th>Prihlasim sa do BO:</th>    
+      <th><a href="https://bobill.etc.example.sk/" target="_blank">https://bobill.etc.example.sk/</a></th>    
+    </tr>
+    <tr align="center">
+      <th>2.</th>    
+      <th>Skontrolujem verziu v pate stranky: Verze BO konzole:</th>    
+      <th>Verze BO konzole: 5.4.X.X Back-office</th>    
+    </tr>
+    <tr align="center">
+      <th>3.</th>    
+      <th>Prevádzkovatelia vozidiel > Vybrat jedneho PV a kliknut na kazde tlacidlo, vytvoriť výpis a export MT</th>    
+      <th><a href="https://bobill.etc.example.sk/customer-management/tolltransaction/?customerid=6500861398&accountid=678729" target="_blank">https://bobill.etc.example.sk/customer-management/tolltransaction/?customerid=6500861398&accountid=678729</a></th>      
+    </tr>
+    <tr align="center">
+      <th>4.</th>    
+      <th>Preklikam" vsetky GRIDy</th>    
+      <th></th>
+    </tr>
+    <tr align="center">
+      <th>5.</th>
+      <th>Reporty > Spustit report > Detailný prehľad podaní  </th>    
+      <th><a href="https://bobill.etc.example.sk/reporting/report/" target="_blank">https://bobill.etc.example.sk/reporting/report/</a></th>      
+    </tr>
+    <tr align="center">
+      <th>5a.</th>    
+      <th>Vysledok reportu</th>    
+      <th><a href="https://bobill.etc.example.sk/reporting/generatedreport/" target="_blank">https://bobill.etc.example.sk/reporting/generatedreport/</a></th>      
+    </tr>
+    <tr align="center">
+      <th>6.</th>    
+      <th>Adminsitracia pristupov / test reset hesla=LINK</th>   
+    </tr>
+    
+  </tbody> 
+  </tbody>
+</table>
+
+<h4>Validacia aj s platbou https://example.atlassian.net/browse/EMSOD-221</h4>
+<h4>Validacia aj s kontrolnou jazdou KDS https://example.atlassian.net/browse/EMSOD-228</h4>
+<hr>
+
+
+{% endblock %}

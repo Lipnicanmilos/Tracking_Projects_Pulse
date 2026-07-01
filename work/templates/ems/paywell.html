@@ -1,0 +1,304 @@
+{% extends "base_ems.html" %}
+
+{% block body %}
+<meta charset="UTF-8">
+<title>PayWell – správa súborov</title>
+
+<div style="padding: 0 2rem;">
+
+{% if message %}
+<div style="background-color: #e2e3e5; padding: 0.5rem; margin: 1rem 0; border-left: 5px solid #6c757d; font-size: 0.95rem;">
+    {{ message|safe }}
+</div>
+{% endif %}
+<hr>
+
+<h1 style="font-family: Arial; color: #343a40;">📊 Prehľad importov za posledných 5 dní:
+    <a href="https://example.sharepoint.com/teams/coo-infra/5230/Reporty/Forms/AllItems.aspx?id=%2Fteams%2Fcoo%2Dinfra%2F5230%2FReporty%2Fdenn%C3%A9%2F2025&viewid=80b843af%2D2112%2D4fe8%2Daa00%2Dda4cdb7f2cf3">Sharepoint</a>
+
+</h1>
+<div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2rem;">
+
+    <div style="flex: 1; min-width: 300px; background-color: #fff; border: 1px solid #ccc; padding: 1rem; border-radius: 6px; box-shadow: 0 0 4px rgba(0,0,0,0.05);">
+        <h3 style="text-align: center;">T_FP_CARD_TRANSACTIONS</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+            <tr style="background-color: #f0f0f0;">
+                <th style="padding: 6px 10px; border: 1px solid #aaa;">Dátum</th>
+                <th style="padding: 6px 10px; border: 1px solid #aaa;">Počet</th>
+            </tr>
+            {% for row in transactions_summary.T_FP_CARD_TRANSACTIONS %}
+            <tr>
+                <td style="padding: 6px 10px; border: 1px solid #aaa; text-align: center;">{{ row.0 }}</td>
+                <td style="padding: 6px 10px; border: 1px solid #aaa; text-align: center;">{{ row.1 }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div style="flex: 1; min-width: 300px; background-color: #fff; border: 1px solid #ccc; padding: 1rem; border-radius: 6px; box-shadow: 0 0 4px rgba(0,0,0,0.05);">
+        <h3 style="text-align: center;">T_FP_FCI_CARD_TRANSACTIONS</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+            <tr style="background-color: #f0f0f0;">
+                <th style="padding: 6px 10px; border: 1px solid #aaa;">Dátum</th>
+                <th style="padding: 6px 10px; border: 1px solid #aaa;">Počet</th>
+            </tr>
+            {% for row in transactions_summary.T_FP_FCI_CARD_TRANSACTIONS %}
+            <tr>
+                <td style="padding: 6px 10px; border: 1px solid #aaa; text-align: center;">{{ row.0 }}</td>
+                <td style="padding: 6px 10px; border: 1px solid #aaa; text-align: center;">{{ row.1 }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div style="flex: 1; min-width: 300px; background-color: #fff; border: 1px solid #ccc; padding: 1rem; border-radius: 6px; box-shadow: 0 0 4px rgba(0,0,0,0.05);">
+        <h3 style="text-align: center;">🧮 Súčet transakcií</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+            <tr style="background-color: #f0f0f0;">
+                <th style="padding: 6px 10px; border: 1px solid #aaa;">Dátum</th>
+                <th style="padding: 6px 10px; border: 1px solid #aaa;">Spolu</th>
+            </tr>
+            {% for row in transactions_summary.SUM %}
+            <tr>
+                <td style="padding: 6px 10px; border: 1px solid #aaa; text-align: center;">{{ row.0 }}</td>
+                <td style="padding: 6px 10px; border: 1px solid #aaa; text-align: center;">{{ row.1 }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+<h1 style="font-family: Arial; color: #343a40;">Automaticky proces:</h1>
+<div class="card mt-4 mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Popis systému</h5>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <i class="fas fa-money-bill-wave mr-2 text-success"></i>
+                <strong>Spracovanie platobných transakcií</strong> - Načítava a analyzuje transakcie z databázy
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-exchange-alt mr-2 text-info"></i>
+                <strong>Import/export dát</strong> - Umožňuje výmenu dát vo formátoch ZIP, XML a SQL
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-file-excel mr-2 text-danger"></i>
+                <strong>Generovanie reportov</strong> - Vytvára komplexné XLSX reporty z transakčných dát
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-clock mr-2 text-warning"></i>
+                <strong>Automatizácia procesov</strong> - Nastaviteľné časové plány pre pravidelné spúšťanie
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-cloud-upload-alt mr-2 text-primary"></i>
+                <strong>Integrácia so SharePointom</strong> - Automatické nahrávanie reportov na SharePoint
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+    <h2 style="margin: 0;">📝 Posledné logy zo súboru <code>auto.log</code>:</h2>
+    <form method="get" action="{% url 'work:download_auto_log' %}">
+        <button type="submit" style="background-color: #6c757d; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px; cursor: pointer;">
+            📥 Stiahnuť celý auto.log
+        </button>
+    </form>
+</div>
+
+
+<div style="background-color: #f8f9fa; border: 1px solid #ccc; padding: 1rem; font-family: monospace; font-size: 0.9rem; max-height: 500px; overflow-y: auto;">
+    {% for line in log_lines %}
+        {{ line }}<br>
+    {% endfor %}
+</div>
+
+
+
+<h2>🛠️ Nastavenie Schedulera</h2>
+<form method="post" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+  {% csrf_token %}
+  <input type="hidden" name="update_scheduler" value="1">
+
+  <label>Hodina:</label>
+  <input type="text" name="hour" value="{{ current_run.hour }}" style="width: 60px; padding: 0.3rem; text-align: center;">
+
+  <label>Minúta:</label>
+  <input type="text" name="minute" value="{{ current_run.minute }}" style="width: 60px; padding: 0.3rem; text-align: center;">
+
+  <label>Deň:</label>
+  <input type="text" name="day" value="{{ current_run.day }}" style="width: 60px; padding: 0.3rem; text-align: center;">
+
+  <label>Mesiac:</label>
+  <input type="text" name="month" value="{{ current_run.month }}" style="width: 60px; padding: 0.3rem; text-align: center;">
+
+  <button type="submit" style="padding: 0.3rem 0.8rem;">💾 Uložiť nastavenie</button>
+</form>
+
+<div class="report-item" style="display: flex; align-items: center; padding: 1rem; gap: 10px;">
+    <span class="report-name">Nastavenie prístupu k SharePointu</span>
+    <a href="https://emstools.example.sk/edz/report_edz_podania_html" class="no-underline">
+        <button type="button" class="btn-action btn-edit" style="min-width: 100px; padding: 0.5rem 1rem;">Edit</button>
+    </a>
+</div>
+
+<hr>
+
+<h1 style="font-family: Arial; color: #343a40;">Manualny proces:</h1>
+
+<div class="card mt-4 mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Popis funkcií</h5>
+    </div>
+    <div class="card-body">
+        <h6 class="card-subtitle mb-3 text-muted">Manuálny proces - hlavné kroky spracovania dát:</h6>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">
+                <i class="fas fa-file-archive mr-2 text-info"></i>
+                <strong>Nahratie ZIP súboru</strong> - Nahrávanie komprimovaných súborov s transakčnými dátami
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-file-export mr-2 text-warning"></i>
+                <strong>Extrahovanie ZIP súborov</strong> - Rozbalenie obsahu ZIP súborov na serveri
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-database mr-2 text-success"></i>
+                <strong>Import do databázy</strong> - Nahranie transakčných dát do Oracle databázy
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-file-excel mr-2 text-danger"></i>
+                <strong>Generovanie reportu</strong> - Vytvorenie XLSX súboru s prehľadom transakcií
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-cloud-upload-alt mr-2 text-primary"></i>
+                <strong>Upload na SharePoint</strong> - Automatické nahratie reportu na SharePoint
+            </li>
+        </ul>
+
+        <h6 class="card-subtitle mb-3 text-muted">Čistenie dát:</h6>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">
+                <i class="fas fa-trash-alt mr-2 text-secondary"></i>
+                <strong>Mazanie transakcií</strong> - Odstránenie transakcií z databázy podľa dátumu
+            </li>
+        </ul>
+
+        <h6 class="card-subtitle mb-3 text-muted">Správa súborov:</h6>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <i class="fas fa-trash mr-2 text-danger"></i>
+                <strong>Mazanie jednotlivých súborov</strong> - Odstránenie konkrétneho súboru z priečinka
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-download mr-2 text-success"></i>
+                <strong>Sťahovanie súborov</strong> - Stiahnutie súboru na lokálne zariadenie
+            </li>
+            <li class="list-group-item">
+                <i class="fas fa-broom mr-2 text-warning"></i>
+                <strong>Mazanie všetkých súborov</strong> - Odstránenie všetkých súborov naraz
+            </li>
+        </ul>
+    </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+    {% csrf_token %}
+    <h4>1.</h4>
+    <input type="file" name="zipfile" accept=".zip" required style="padding: 0.3rem;">
+    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px; cursor: pointer;">
+        Nahrať ZIP
+    </button>
+</form>
+
+
+<form method="post" style="margin-bottom: 1rem;">
+    {% csrf_token %}
+    <h4 style="display: inline-block; margin: 0 0.8rem 0 0;">2.</h4>
+    <button type="submit" name="unzip_files" style="background-color: #007bff; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px; display: inline-block; vertical-align: middle;">Odzipovať všetky .zip súbory</button>
+</form>
+
+<form method="post" enctype="multipart/form-data" style="margin-bottom: 1rem;">
+    {% csrf_token %}
+    <h4 style="display: inline-block; margin: 0 0.8rem 0 0;">3.</h4>
+    <button type="submit" name="import_sql" style="background-color: #28a745; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px; display: inline-block;">💾 Importovať SQL do databázy</button>
+</form>
+
+<!-- Generovať report -->
+<form method="post" style="display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; max-width: 500px;">
+    {% csrf_token %}
+    <h4>4.</h4>
+    <label style="white-space: nowrap;">📊 Generovať report XLSX:</label>
+    <input type="text" name="report_date" placeholder="DD.MM.YYYY" required 
+           style="width: 130px; padding: 0.3rem 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+    <button type="submit" name="generate_report" 
+            style="background-color: #007bff; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px;">
+        Generovať report
+    </button>
+</form>
+
+<form method="post" style="margin-top: 1rem;">
+    {% csrf_token %}
+    <h4 style="display: inline-block; margin: 0 0.8rem 0 0;">5.</h4>
+    <button type="submit" name="upload_shp" style="background-color: #17a2b8; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px; display: inline-block; vertical-align: middle;">
+        ☁️ Nahrať XLSX report na SharePoint
+    </button>
+</form>
+
+<br>
+<hr>
+<!-- Vymazať transakcie -->
+<form method="post" style="display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; max-width: 500px;">
+    {% csrf_token %}
+    <i>
+    <label style="white-space: nowrap;">🧹 Vymazať transakcie z DB:</label>
+    <input type="text" name="delete_date" placeholder="DD.MM.YYYY" required 
+           style="width: 130px; padding: 0.3rem 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+    <button type="submit" name="delete_transactions_by_date" 
+            style="background-color: #dc3545; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px;">
+        Vymazať transakcie
+    </button>
+    </i>
+</form>
+<hr>
+
+<h2 style="font-family: Arial; color: #343a40;">Súbory v priečinku:</h2>
+{% if files %}
+<ul style="list-style: none; padding-left: 0;">
+    {% for file in files %}
+        <li style="margin: 0.5rem 0; background: #fff3cd; padding: 0.5rem; border-radius: 5px; border-left: 5px solid #ffc107; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
+            <span>{{ file }}</span>
+            <div style="display: flex; gap: 0.5rem;">
+                <form method="post" style="margin: 0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete_file" value="{{ file }}">
+                    <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px;">Vymazať</button>
+                </form>
+                <a href="{% url 'work:download_sql' filename=file %}" target="_blank">
+                    <button type="button" style="background-color: #28a745; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px;">📥 Stiahnuť</button>
+                </a>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
+<div style="text-align: center; margin-top: 1rem;">
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="delete_all" value="1">
+        <button type="submit" 
+                style="background-color: #dc3545; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px;">
+            Vymazať všetky súbory
+        </button>
+    </form>
+</div>
+
+<br>
+
+{% else %}
+<p>Žiadne súbory nenájdené.</p>
+{% endif %}
+</div>
+{% endblock %}

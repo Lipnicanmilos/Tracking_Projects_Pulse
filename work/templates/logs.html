@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="content" style="padding-left: 15px; padding-right: 15px;">
+<table class="table" style="table-layout: fixed;">
+    <h3 style="text-align:center">Web logs</h3>
+    <!-- <thead>
+      <tr>
+        <p>tetsasds</p>
+        <th > <p> Web logs </p></th>
+      </tr>
+    </thead> -->
+    <tbody>
+      <tr>
+        <th scope="row">BO-ACIS</th> 
+        <td>\\acis-web01\BOLogs\ </td>
+        <td><a href="{% url 'work:download_acisBO'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <th scope="row">BO-BCIS</th>
+        <!-- <a href="http:\\bcis-web01\\BOLogs\\"  target="_blank"></a> -->
+        <td>\\bcis-web01\BOLogs\</td>
+        <td><a href="{% url 'work:download_bcisBO'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">POS-ACIS</th>
+        <td>\\acis-web01\WEB\POS\Logs\</td>
+        <td><a href="{% url 'work:download_acisPOS'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">POS-BCIS</th>
+        <td>\\bcis-web01\POSLogs\</td>
+        <td><a href="{% url 'work:download_bcisPOS'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">FCI-ACIS</th>
+        <td>\\acis-web02\FCILogs\</td>
+        <td><a href="{% url 'work:download_acisFCI'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">FCI-BCIS</th>
+        <td>\\bcis-web02\FCILogs\</td>
+        <td><a href="{% url 'work:download_bcisFCI'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">SC-ACIS</th>
+        <td>\\acis-web02\SCLogs\</td>
+        <td><a href="{% url 'work:download_acisSC'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">SC-BCIS</th>
+        <td>\\bcis-web02\SCLogs\</td>
+        <td><a href="{% url 'work:download_bcisSC'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+    </tbody>
+  </table>
+
+<hr>
+
+<table class="table" style="table-layout: fixed;">
+  <h3 style="text-align:center">APP logs</h3>
+  <tbody>
+    <tr>
+      <th scope="row">APP01-ACIS</th> 
+      <td>\\acis-app01\Logs\</td>
+      <td><a href="{% url 'work:download_acisAPP01_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:download_acisAPP01_app'  %}"><button>App_Logs</button></a>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">APP02-ACIS</th> 
+      <td>\\acis-app02\Logs\</td>
+      <td><a href="{% url 'work:download_acisAPP02_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:download_acisAPP02_app'  %}"><button>App_Logs</button></a>  
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">APP03-ACIS</th> 
+      <td>\\acis-app03\Logs\</td>
+      <td><a href="{% url 'work:download_acisAPP03_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:download_acisAPP03_app'  %}"><button>App_Logs</button></a>  
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">APP04-ACIS</th> 
+      <td>\\acis-app04\Logs\</td>
+      <td><a href="{% url 'work:download_acisAPP04_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:download_acisAPP04_app'  %}"><button>App_Logs</button></a>  
+      </td>
+    </tr>
+    
+    <tr>
+      <th scope="row">APP01-BCIS</th> 
+      <td>\\bcis-app01\Logs\</td>
+      <td><a href="{% url 'work:download_bcisAPP01_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:download_bcisAPP01_app'  %}"><button>App_Logs</button></a>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">APP02-BCIS</th> 
+      <td>\\bcis-app02\Logs\</td>
+      <td><a href="{% url 'work:download_bcisAPP02_error'  %}"><button>Error_Logs</button></a>
+       <a href="{% url 'work:download_bcisAPP02_app'  %}"><button>App_Logs</button></a> 
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">APP03-BCIS</th> 
+      <td>\\bcis-app03\Logs\</td>
+      <td><a href="{% url 'work:download_bcisAPP03_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:download_bcisAPP03_app'  %}"><button>App_Logs</button></a>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">APP04-BCIS</th> 
+      <td>\\bcis-app04\Logs\</td>
+      <td><a href="{% url 'work:download_bcisAPP04_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:download_bcisAPP04_app'  %}"><button>App_Logs</button></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<table class="table" style="table-layout: fixed;">
+    <h3 style="text-align:center">IS logs</h3>
+    <tbody>
+      <tr>
+        <th scope="row">IS-ACIS</th> 
+        <td>\\acis-is01\Logs\</td>
+        <td><a href="{% url 'work:download_acisIS_error'  %}"><button>Error_Logs</button></a>
+          <a href="{% url 'work:download_acisIS_app'  %}"><button>App_Logs</button></a>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">IS-BCIS</th> 
+        <td>\\bcis-is01\Logs\</td>
+        <td><a href="{% url 'work:download_bcisIS_error'  %}"><button>Error_Logs</button></a>
+          <a href="{% url 'work:download_bcisIS_app'  %}"><button>App_Logs</button></a>  
+        </td>
+      </tr>
+    </tbody>
+</table>
+
+<hr>
+<!-- <h3>ALL BackUp Logs<a href="{ url 'work:open_all_logs'  }" > <b>\\fileserver.internal.example.com\billien\CIS\</b></a></h3> -->
+
+<form action="\open_all_logs" method="">
+          <button class="btn-lg">OPEN: \\fileserver.internal.example.com\billien\CIS\</button>
+</form>
+<h4>\\fileserver.internal.example.com\billien\CIS</h4>
+<!-- target="_blank" -->
+
+<br>
+<br>
+</div>
+{% endblock %}

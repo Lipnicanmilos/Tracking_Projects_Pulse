@@ -1,0 +1,38 @@
+[
+    {
+        "model": "EDZ_Invoices",
+        "fields": {
+            "emails": [
+                " user@example.com"
+            ],
+            "run": "{\"hour\": \"10\", \"minute\": \"05\", \"day\": \"5\", \"month\": \"*\"}",
+            "head": "EDZ_Invoices",
+            "body": "Dobry den \\n\\nObsahom tohto emailu je automaticky vygenerovany report v prilohe. \\n\\nS pozdravom \\nPrevadzka App"
+        }
+    },
+    {
+        "model": "EDZ_CRV",
+        "fields": {
+            "emails": [
+                "user@example.com"
+            ],
+            "run": "{\"hour\": \"11\", \"minute\": \"30\", \"day\": \"6\", \"month\": \"*\"}",
+            "head": "EDZ_CRV_report",
+            "body": "Dobry den \\n\\nObsahom tohto emailu je automaticky vygenerovany report v prilohe(zip). \\n\\nS pozdravom \\nPrevadzka App"
+        }
+    },
+    {
+        "model": "EDZ_Podania",
+        "fields": {
+            "emails": [
+                "user@example.com",
+                " jakub.ress@example.sk"
+            ],
+            "run": "{\"hour\": \"12\", \"minute\": \"12\", \"day\": \"01\", \"month\": \"*\"}",
+            "head": "EDZ_Rep_podania",
+            "body": "Dobry den \\n\\nObsahom tohto emailu je automaticky vygenerovany report v prilohe. \\n\\nPripadne nastavenie spustenia reportu: https://emstools.example.sk/edz/reports_View  \\n\\nProsim o kontrolu reportu na sharepointe: https://example.sharepoint.com/teams/example-team/Zkazncke%20podania/Forms/AllItems.aspx?id=%2Fteams%2Fcoo%2Dbdpcp%2FZkazncke%20podania%2FREPORT%20%2D%20po%C4%8Det%20podan%C3%AD%20EDZ%20na%20KM&p=true&ct=1724406406643&or=OWA%2DNT%2DMail&cid=ee882d67%2D13f3%2D9ddc%2Df1c8%2De5447728226e&ga=1 \\n\\nS pozdravom \\nPrevadzka App",
+            "username": "app_user@example.sk",
+            "password": "Lip32nican33"
+        }
+    }
+]

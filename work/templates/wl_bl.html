@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+            <div class="input-group" style="display: flex;">
+              <div class="input-group date" id='picker' style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                <input type="text" name="x" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;" />
+                <span class="input-group-addon" >
+                  <span class="glyphicon glyphicon-calendar"></span>	                 
+                </span>
+              </div>
+                <b> <p style="margin-top: 7px;"><</p> </b>
+                
+                  <div class="input-group date" id='picker2'  style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                    <input type="text" name="y" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;"
+                    class="form-control form-control-lg" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>	                 
+                    </span>
+                  </div>
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+
+<style>
+  #table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+
+}
+  #table-scroll {
+    max-height:283px;
+    min-height:50px;
+    overflow:scroll;  
+    margin-top:20px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+  </style>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7;float: left;">Blacklists and Whitelists that do not have an ACKnowledgment answer or are in a state other than 'Zpracovaný' . /sysdate-7/</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+
+      <table id=tab1 class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>Nm.</th>
+          <th>BO Link</th>
+          <th>EETS_INTEGRATION_LOG_ITEM_ID</th>
+          <th>INTEGRATION_LOG_ID</th>
+          <th>EETS_INT_LOG_STATUS_NAME</th>
+          <th>STARTED_ON</th>
+          <th>REJECT_METHOD_RESULT</th>
+          <th>EXCEPTION_LIST_TYPE_NAME</th>
+          <th>APPROVAL_STATUS_CODE</th>
+          <th>PROVIDER_ABBREVIATION</th>
+          <th>MESSAGE_NUMBER</th>
+          <th>NEXT_MESSAGE_NUMBER</th>
+          <th>VERSION</th>
+          <th>EXCEPTION_LIST_VALID_FROM</th>
+          <th>EXCEPTION_LIST_VALID_TO</th>
+          <th>APPROVAL_DATE_TIME</th>
+          <th>APPROVED_BY</th>
+          <th>LOG_FILE_CREATED_ON</th>
+          <th>ACK_FILE_CREATED_ON</th>
+          <th>PROCESS_DATE_TIME</th>
+          <th>PROCESS_COUNT</th>
+
+
+        </tr></thead>
+        <tbody >
+          {% for row in wl_bl_error %}
+
+          <tr align="center">
+            <th>{{ forloop.counter }}</th>
+            <th ><a href="https://cis-host.internal.example.com/ecm/eetsimport/detail/?integrationLogId={{row.EETS_INTEGRATION_LOG_ITEM_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.PROVIDER_ABBREVIATION }} {{row.EXCEPTION_LIST_TYPE_NAME}}  {{row.EETS_INTEGRATION_LOG_ITEM_ID}} </i></a></th>   
+            <th style="color: red;">{{ row.EETS_INTEGRATION_LOG_ITEM_ID }}</th>
+            <th style="color: red;">{{ row.INTEGRATION_LOG_ID }}</th>
+            <th style="color: red;">{{ row.EETS_INT_LOG_STATUS_NAME }}</th>
+            <th style="color: red;">{{ row.STARTED_ON |date:"d-m-Y G:i:s"}}</th>
+            <th style="color: red;">{{ row.REJECT_METHOD_RESULT }}</th>
+            <th style="color: red;">{{ row.EXCEPTION_LIST_TYPE_NAME }}</th>
+            <th style="color: red;">{{ row.APPROVAL_STATUS_CODE }}</th>
+            <th style="color: red;">{{ row.PROVIDER_ABBREVIATION }}</th>
+            <th style="color: red;">{{ row.MESSAGE_NUMBER }}</th>
+            <th style="color: red;">{{ row.NEXT_MESSAGE_NUMBER }}</th>
+            <th style="color: red;">{{ row.VERSION }}</th>
+            <th style="color: red;">{{ row.EXCEPTION_LIST_VALID_FROM |date:"d-m-Y G:i:s"}}</th>
+            <th style="color: red;">{{ row.EXCEPTION_LIST_VALID_TO |date:"d-m-Y G:i:s"}}</th>
+            <th style="color: red;">{{ row.APPROVAL_DATE_TIME }}</th>
+            <th style="color: red;">{{ row.APPROVED_BY }}</th>
+            <th style="color: red;">{{ row.LOG_FILE_CREATED_ON }}</th>
+            <th style="color: red;">{{ row.ACK_FILE_CREATED_ON |date:"d-m-Y G:i:s"}}</th>
+            <th style="color: red;">{{ row.PROCESS_DATE_TIME |date:"d-m-Y G:i:s"}}</th>
+            <th style="color: red;">{{ row.PROCESS_COUNT }}</th>
+
+
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+  </div>
+  <button id="createXLSX">Export XLSX</button>
+</div>
+
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7; float: left;">All Blacklists and Whitelists /sysdate-7/ or searched by date and time.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          Select EETS_INTEGRATION_LOG_ITEM_ID, INTEGRATION_LOG_ID, EETS_INT_LOG_STATUS_NAME, REJECT_METHOD_RESULT, exl.EXCEPTION_LIST_TYPE_NAME, APPROVAL_STATUS_CODE, p.PROVIDER_ABBREVIATION, MESSAGE_NUMBER, NEXT_MESSAGE_NUMBER, VERSION, CAST(FROM_TZ(CAST(EXCEPTION_LIST_VALID_FROM AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as EXCEPTION_LIST_VALID_FROM, CAST(FROM_TZ(CAST(EXCEPTION_LIST_VALID_TO AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as EXCEPTION_LIST_VALID_TO, APPROVAL_DATE_TIME, APPROVED_BY, CAST(FROM_TZ(CAST(STARTED_ON AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as STARTED_ON, LOG_FILE_CREATED_ON, CAST(FROM_TZ(CAST(ACK_FILE_CREATED_ON AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as ACK_FILE_CREATED_ON, CAST(FROM_TZ(CAST(PROCESS_DATE_TIME AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as PROCESS_DATE_TIME, PROCESS_COUNT FROM CIS_ECM.EETS_INTEGRATION_LOG_ITEM ite JOIN cis_ECM.EETS_INT_LOG_STATUS_L il ON ite.EETS_IL_STATUS_CODE = il.EETS_INT_LOG_STATUS_CODE AND il.language_code = 'CS' JOIN cis_ECM.EXCEPTION_LIST_TYPE_L exl ON ite.EXCEPTION_LIST_TYPE_CODE = exl.EXCEPTION_LIST_TYPE_CODE AND il.language_code = 'CS' JOIN CIS_ECM.EETS_PROVIDER p ON ite.eets_provider_id = p.EETS_PROVIDER_ID ORDER BY EXCEPTION_LIST_VALID_FROM desc;
+
+      
+                  </p>
+        </div>
+      </div>
+    </td>
+      <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>BO Link</th>
+          <th>EETS_INTEGRATION_LOG_ITEM_ID</th>
+          <th>INTEGRATION_LOG_ID</th>
+          <th>EETS_INT_LOG_STATUS_NAME</th>
+          <th>STARTED_ON</th>
+          <th>REJECT_METHOD_RESULT</th>
+          <th>EXCEPTION_LIST_TYPE_NAME</th>
+          <th>APPROVAL_STATUS_CODE</th>
+          <th>PROVIDER_ABBREVIATION</th>
+          <th>MESSAGE_NUMBER</th>
+          <th>NEXT_MESSAGE_NUMBER</th>
+          <th>VERSION</th>
+          <th>EXCEPTION_LIST_VALID_FROM</th>
+          <th>EXCEPTION_LIST_VALID_TO</th>
+          <th>APPROVAL_DATE_TIME</th>
+          <th>APPROVED_BY</th>
+          <th>LOG_FILE_CREATED_ON</th>
+          <th>ACK_FILE_CREATED_ON</th>
+          <th>PROCESS_DATE_TIME</th>
+          <th>PROCESS_COUNT</th>
+
+        </tr></thead>
+        <tbody>
+          {% for row in wl_bl %}
+
+          
+          <tr align="center">
+            <th ><a href="https://cis-host.internal.example.com/ecm/eetsimport/detail/?integrationLogId={{row.EETS_INTEGRATION_LOG_ITEM_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.PROVIDER_ABBREVIATION }} {{row.EXCEPTION_LIST_TYPE_NAME}} {{row.EETS_INTEGRATION_LOG_ITEM_ID}} </i></a></th>   
+            <th>{{ row.EETS_INTEGRATION_LOG_ITEM_ID }}</th>
+            <th>{{ row.INTEGRATION_LOG_ID }}</th>
+            <th>{{ row.EETS_INT_LOG_STATUS_NAME }}</th>
+            <th>{{ row.STARTED_ON |date:"d-m-Y G:i:s"}}</th>
+            <th>{{ row.REJECT_METHOD_RESULT }}</th>
+            <th>{{ row.EXCEPTION_LIST_TYPE_NAME }}</th>
+            <th>{{ row.APPROVAL_STATUS_CODE }}</th>
+            <th>{{ row.PROVIDER_ABBREVIATION }}</th>
+            <th>{{ row.MESSAGE_NUMBER }}</th>
+            <th>{{ row.NEXT_MESSAGE_NUMBER }}</th>
+            <th>{{ row.VERSION }}</th>
+            <th>{{ row.EXCEPTION_LIST_VALID_FROM |date:"d-m-Y G:i:s"}}</th>
+            <th>{{ row.EXCEPTION_LIST_VALID_TO |date:"d-m-Y G:i:s"}}</th>
+            <th>{{ row.APPROVAL_DATE_TIME }}</th>
+            <th>{{ row.APPROVED_BY }}</th>
+            <th>{{ row.LOG_FILE_CREATED_ON }}</th>
+            <th>{{ row.ACK_FILE_CREATED_ON |date:"d-m-Y G:i:s"}}</th>
+            <th>{{ row.PROCESS_DATE_TIME |date:"d-m-Y G:i:s"}}</th>
+            <th>{{ row.PROCESS_COUNT }}</th>
+
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+      
+  </div>
+  <button id="createXLSX_2">Export XLSX</button>
+  </div>
+
+    <script type="text/javascript">
+      $('#picker').datetimepicker({
+  format: 'DD-MM-YYYY HH:mm:ss'
+    });
+    $('#picker2').datetimepicker({
+      format: 'DD-MM-YYYY HH:mm:ss'
+    });
+  </script>
+  <script>
+    $(document).ready(function(){
+      $("#myInput_1").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tab1 tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+      $("#myInput_2").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tab2 tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+
+      // export excel 
+  var btn = document.getElementById("createXLSX");
+  var fileName = "export_wl_bl_error";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_wl_bl";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+    </script>
+
+{% endblock %}

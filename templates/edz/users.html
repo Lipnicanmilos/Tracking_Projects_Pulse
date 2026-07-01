@@ -1,0 +1,213 @@
+{% extends "edz/home_edz.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+              <div class="input-group" style="display: flex;">
+                <input type="text" name="x" placeholder="...search for users by POS_ID..."
+                class="form-control form-control-lg" />
+                <b> <p style="margin-top: 7px;">OR</p> </b>
+                <input type="text" name="y" placeholder="...%username%..."
+                class="form-control form-control-lg" />
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<style>
+#table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+  #table-scroll {
+    height:283px;
+    overflow:scroll;  
+    margin-top:20px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+  </style>
+  
+  <div id="table-wrapper">
+    {% comment %} <td colspan = "4"><b style="color: #337ab7;">Jobs that are not successful or EXPECTED_NUMBER_OF_ITEMS!=SUCCESSFULLY_PROCESSED_ITEMS for the last three days.</b></td> {% endcomment %}
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT POS_ID, POS_NUMBER, POS_NAME, pos.POS_TYPE_CODE, POS_TYPE_NAME, pos.RETAIL_PARTNER_ID, rp.RETAIL_PARTNER_NAME
+                from billien_co.pos pos
+                left join billien_co.POS_TYPE_L typ on pos.POS_TYPE_CODE=typ.POS_TYPE_CODE
+                left join billien_co.retail_partner rp on pos.retail_partner_id = rp.retail_partner_id
+                where pos.priority != '-1'
+                and typ.LANGUAGE_CODE='SK'
+                order by POS_NUMBER
+                  </p>
+        </div>
+      </div>
+    </td>
+    <div id="table-scroll">
+        <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+
+      <!-- <h3 style="text-align: center;">Jobs</h3> -->
+
+      <!-- <table id="sortTable" class="table table-hover sortable" style="display: block; overflow-x: auto; white-space: nowrap; border: ridge;"> -->
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>POS_ID</th>
+          <th>POS_NUMBER</th>
+          <th>POS_NAME</th>
+          <th>POS_TYPE_CODE</th>
+          <th>POS_TYPE_NAME</th>
+          <th>RETAIL_PARTNER_ID</th>
+          <th>RETAIL_PARTNER_NAME</th>
+        </tr></thead>
+        <tbody>
+          {% for row in Poses  %}
+        <tr align="center">
+          <th>{{ row.POS_ID }}</th> 
+          <th>{{ row.POS_NUMBER }}</th>    
+          <th><a href="https://bo.eznamka.sk/configuration/pos/detail/?id={{row.POS_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.POS_NAME }}</th>    
+          <th>{{ row.POS_TYPE_CODE }}</th>
+          <th>{{ row.POS_TYPE_NAME }}</th> 
+          <th>{{ row.RETAIL_PARTNER_ID }}</th> 
+          <th><a href="https://bo.eznamka.sk/configuration/retailpartner/detail/?id={{row.RETAIL_PARTNER_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.RETAIL_PARTNER_NAME }}</th>  
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+
+    </div>
+    <button id="createXLSX">Export XLSX</button>
+    
+</div>
+{% if users != '' %}
+<div id="table-wrapper" style="margin-bottom: 30px;">
+
+  <div id="table-scroll" >
+    <td colspan = "4"><b style="color: #337ab7; float: left;">History of the course of the selected job.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT 
+                  </p>
+        </div>
+      </div>
+    </td>
+    <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+      <thead>
+            
+          <tr style="background-color: darkgrey;">
+            <th>POS_ID</th>
+            <th>USER_ID</th>
+            <th>USER_NAME</th>
+            <th>FIRST_NAME</th>
+            <th>LAST_NAME</th>
+            <th>USER_STATUS_CODE</th>
+            <th>USER_STATUS_NAME</th>
+            <th>EMAIL</th>    
+            <th>SELFCARE_USER_GROUP_ID</th>              
+            <th>CREATION_DATETIME</th>
+            <th>EXPIRATION_DATE</th>
+            <th>DELETED_ON</th>
+            <th>ROLE</th>
+
+
+          </tr>
+    </thead>
+      <tbody>
+        {% for row in users %}
+      <tr align="center">
+        {% comment %} <th>{{ row.USER_ID |date:"d-m-Y G:i:s" }}</th>  {% endcomment %}
+        <th>{{ row.POS_ID}}</th>
+        <th>{{ row.USER_ID }}</th> 
+        <th><a href="https://bo.eznamka.sk/security/user/detail/{{row.USER_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.USER_NAME }}</th>
+          <th>{{ row.FIRST_NAME }}</th>
+          <th>{{ row.LAST_NAME }}</th>
+          <th>{{ row.USER_STATUS_CODE }}</th>
+          <th>{{ row.USER_STATUS_NAME }}</th> 
+          <th>{{ row.EMAIL }}</th>        
+          <th>{{ row.SELFCARE_USER_GROUP_ID }}</th> 
+          <th>{{ row.CREATION_DATETIME |date:"d-m-Y G:i:s" }}</th>
+          <th>{{ row.EXPIRATION_DATE |date:"d-m-Y G:i:s" }} </th>
+          <th>{{ row.DELETED_ON |date:"d-m-Y G:i:s" }}</th>   
+          <th>{{ row.ROLE }}</th>  
+        {% endfor %}
+
+      </tr>
+    </tbody> 
+    </table>
+  </div>
+  <button id="createXLSX_2">Export XLSX</button>
+{% endif %}
+</div>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+    // export excel 
+    var btn = document.getElementById("createXLSX");
+  var fileName = "export_poses";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_users";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+  </script>
+
+{% endblock %}

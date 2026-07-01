@@ -1,0 +1,345 @@
+{% extends "eets/base.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+              <div class="input-group" style="display: flex;">
+                  <input type="text" name="q" placeholder="...find the job_name in the database..."
+                  class="form-control form-control-lg" />
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<style>
+#table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+  #table-scroll {
+    height:auto;
+    overflow:scroll;  
+    margin-top:20px;
+    max-height: 300px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+  </style>
+
+
+  
+  <div id="table-wrapper">
+    <td colspan = "4"><b style="color: #337ab7;">Jobs that are not successful or EXPECTED_NUMBER_OF_ITEMS!=SUCCESSFULLY_PROCESSED_ITEMS for the last three days.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT * FROM(
+                    SELECT CAST(FROM_TZ(CAST(ACTION_DATETIME AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as ACTION_DATETIME, ji.SCHEDULED_JOB_ID, JOB_NAME,
+                    EXECUTION_STATE_NAME, EXPECTED_NUMBER_OF_ITEMS, SUCCESSFULLY_PROCESSED_ITEMS, UNSUCCESSFULLY_PROCESSED_ITEMS
+                    FROM eets_CO.JOB_INSTANCE ji
+                    left join eets_CO.EXECUTION_STATE_L exs on ji.EXECUTION_STATE_CODE=exs.EXECUTION_STATE_CODE
+                    left join eets_CO.SCHEDULED_JOB sj on ji.SCHEDULED_JOB_ID=sj.SCHEDULED_JOB_ID
+                    where
+                    exs.LANGUAGE_CODE='SK' and START_ACTION_DATETIME >= trunc(sysdate-3)
+                                   --and ji.SCHEDULED_JOB_ID=143
+                    and ji.EXECUTION_STATE_CODE!=4
+                    --and UNSUCCESSFULLY_PROCESSED_ITEMS>0
+                    or EXPECTED_NUMBER_OF_ITEMS !=SUCCESSFULLY_PROCESSED_ITEMS and exs.LANGUAGE_CODE='SK' and START_ACTION_DATETIME >= trunc(sysdate-3)
+                    order by START_ACTION_DATETIME desc)
+                  </p>
+        </div>
+      </div>
+    </td>
+    <div id="table-scroll">
+        <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+
+      <!-- <h3 style="text-align: center;">Jobs</h3> -->
+
+      <!-- <table id="sortTable" class="table table-hover sortable" style="display: block; overflow-x: auto; white-space: nowrap; border: ridge;"> -->
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>BO Link</th>
+          <th>ACTION_DATETIME</th>
+          <th>JOB_ID</th>
+          <th>JOB_NAME</th>
+          <th>EXECUTION</th> 
+          <th>NUMBER_OF_ITEMS</th>
+          <th>SUCCESSFULLY_ITEMS</th>
+          <th>UNSUCCESSFULLY_ITEMS</th>
+        </tr></thead>
+        <tbody>
+          {% for row in jobe %}
+        <tr align="center">
+
+          {% if row.EXECUTION_STATE_NAME != 'Úspešný' %}
+          <th ><a href="https://bo.internal.example.com/configuration/job/detail/{{row.SCHEDULED_JOB_ID}}" target="_blank"> <i style='color: forestgreen;'> BO {{ row.JOB_NAME }} </i></a></th>  
+          <th style="color: red;">{{ row.ACTION_DATETIME |date:"d-m-Y G:i:s" }}</th> 
+          <th style="color: red;">{{ row.SCHEDULED_JOB_ID }}</th>    
+          <th style="color: red;">{{ row.JOB_NAME }}</th>
+          <th style="color: red;">{{ row.EXECUTION_STATE_NAME }}</th>
+          <th style="color: red;">{{ row.EXPECTED_NUMBER_OF_ITEMS }}</th>
+          <th style="color: red;">{{ row.SUCCESSFULLY_PROCESSED_ITEMS }}</th>
+          <th style="color: red;">{{ row.UNSUCCESSFULLY_PROCESSED_ITEMS }}</th>
+
+        {% else %} 
+        <th ><a href="https://bo.internal.example.com/configuration/job/detail/{{row.SCHEDULED_JOB_ID}}" target="_blank"> <i style='color: forestgreen;'> BO {{ row.JOB_NAME }} </i></a></th>        
+
+          <th>{{ row.ACTION_DATETIME }}</th> 
+          <th>{{ row.SCHEDULED_JOB_ID }}</th>    
+          <th>{{ row.JOB_NAME }}</th>
+          <th>{{ row.EXECUTION_STATE_NAME }}</th> 
+          <th>{{ row.EXPECTED_NUMBER_OF_ITEMS }}</th>    
+          <th>{{ row.SUCCESSFULLY_PROCESSED_ITEMS }}</th>    
+          <th>{{ row.UNSUCCESSFULLY_PROCESSED_ITEMS }}</th>    
+
+          {% endif %}
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+
+    </div>
+    <button id="createXLSX">Export XLSX</button>
+    
+</div>
+
+{% if job_s != '' %}
+
+<div id="table-wrapper" style="margin-bottom: 30px;">
+
+  <div id="table-scroll" >
+    <td colspan = "4"><b style="color: #337ab7; float: left;">History of the course of the selected job.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT
+              CAST(from_tz(CAST(action_datetime AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) AS action_datetime,
+              ji.scheduled_job_id,
+              job_name,
+              execution_state_name,
+              expected_number_of_items,
+              successfully_processed_items,
+              unsuccessfully_processed_items
+          FROM
+              edz_co.job_instance        ji
+              LEFT JOIN edz_co.execution_state_l   exs ON ji.execution_state_code = exs.execution_state_code
+              LEFT JOIN edz_co.scheduled_job       sj ON ji.scheduled_job_id = sj.scheduled_job_id
+          WHERE
+              exs.language_code = 'SK'
+              AND start_action_datetime >= trunc(SYSDATE - 7)
+              AND job_name LIKE '%RemoveTemporaryDocuments%'
+          ORDER BY
+              start_action_datetime DESC;
+                  </p>
+        </div>
+      </div>
+    </td>
+    <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+      <thead>
+            
+          <tr style="background-color: darkgrey;">
+            <th>ACTION_DATETIME</th>
+            <th>SCHEDULED_JOB_ID</th>
+            <th>JOB_NAME</th>
+            <th>EXECUTION_STATE_NAME</th>
+            <th>EXPECTED_NUMBER_OF_ITEMS</th>
+            <th>SUCCESSFULLY_PROCESSED_ITEMS</th>
+            <th>UNSUCCESSFULLY_PROCESSED_ITEMS</th>
+
+          </tr>
+    </thead>
+      <tbody>
+        {% for row in job_s %}
+      <tr align="center">
+        {% if row.EXECUTION_STATE_NAME != 'Úspešný' %}
+
+        <th style="color: red;">{{ row.ACTION_DATETIME |date:"d-m-Y G:i:s" }}</th> 
+        <th style="color: red;">{{ row.SCHEDULED_JOB_ID }}</th>    
+        <th style="color: red;">{{ row.JOB_NAME }}</th>
+        <th style="color: red;">{{ row.EXECUTION_STATE_NAME }}</th>
+        <th style="color: red;">{{ row.EXPECTED_NUMBER_OF_ITEMS }}</th>
+        <th style="color: red;">{{ row.SUCCESSFULLY_PROCESSED_ITEMS }}</th>
+        <th style="color: red;">{{ row.UNSUCCESSFULLY_PROCESSED_ITEMS }}</th>
+
+
+        {% else %} 
+
+        <th>{{ row.ACTION_DATETIME |date:"d-m-Y G:i:s" }}</th> 
+        <th>{{ row.SCHEDULED_JOB_ID }}</th>    
+        <th>{{ row.JOB_NAME }}</th>
+        <th>{{ row.EXECUTION_STATE_NAME }}</th>
+        <th>{{ row.EXPECTED_NUMBER_OF_ITEMS }}</th>
+        <th>{{ row.SUCCESSFULLY_PROCESSED_ITEMS }}</th>
+        <th>{{ row.UNSUCCESSFULLY_PROCESSED_ITEMS }}</th>
+
+        
+        {% endif %}
+
+        {% endfor %}
+
+      </tr>
+    </tbody> 
+    </table>
+  </div>
+  <button id="createXLSX_2">Export XLSX</button>
+{% endif %}
+
+{% comment %} all jobs {% endcomment %}
+
+{% if job_s == '' %}
+<div id="table-wrapper">
+  <td colspan = "4"><b style="color: #337ab7;">Jobs that are not successful or EXPECTED_NUMBER_OF_ITEMS!=SUCCESSFULLY_PROCESSED_ITEMS for the last three days.</b></td>
+  <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+  <br>
+  <td>
+    <div class="dropdown">
+      <button>Query</button>
+      <div class="dropdown-content"><p>
+        SELECT 
+                job.SCHEDULED_JOB_ID,
+                JOB_NAME,
+                JOB_DESCRIPTION,
+                SCHEDULER_ACTION_ID,
+                REPETITION_TYPE_CODE,
+                REPETITION_COUNT,
+                INCLUDE_WEEKENDS,
+                INCLUDE_HOLIDAYS,
+                FLAG_DAY_MULTIPICK,
+                FLAG_MONTH_MULTIPICK,
+                FLAG_DAY_OF_MONTH_MULTIPICK,
+                FROM_TIME,
+                TO_TIME,
+                SCHEDULED_FROM,
+                SCHEDULED_TO,
+                job.AS_GROUP_ID,
+                CAST(FROM_TZ(CAST(EXECUTION_DATETIME AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as EXECUTION_DATETIME,
+                job.JOB_INSTANCE_ID,
+                LAST_JOB_INSTANCE_ID,
+                CAST(FROM_TZ(CAST(job.CHANGED_ON AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as CHANGED_ON,
+                SYSTEM_TASK,
+                CUSTOM_INTERVAL,
+                job.SCHEDULER_PARAMETER_SET_ID,
+                DELETED_ON,
+                EXECUTION_STATE_NAME
+                FROM EETS_CO.SCHEDULED_JOB job
+                left join EETS_CO.JOB_INSTANCE ins on job.LAST_JOB_INSTANCE_ID=ins.JOB_INSTANCE_ID
+                left join eets_CO.EXECUTION_STATE_L exs on ins.EXECUTION_STATE_CODE=exs.EXECUTION_STATE_CODE and  exs.LANGUAGE_CODE='SK'
+                order by CHANGED_ON desc
+                </p>
+      </div>
+    </div>
+  </td>
+  <div id="table-scroll">
+      <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+
+    <!-- <h3 style="text-align: center;">Jobs</h3> -->
+
+    <!-- <table id="sortTable" class="table table-hover sortable" style="display: block; overflow-x: auto; white-space: nowrap; border: ridge;"> -->
+      <thead>
+      <tr style="background-color: darkgrey;">
+        <th>BO Link</th>
+        <th>JOB_ID</th>
+        <th>JOB_NAME</th>
+        <th>EXECUTION</th> 
+        <th>CHANGED_ON</th>
+        <th>EXECUTION_STATE_NAME</th>
+        <th>NEXT RUN</th>
+      </tr></thead>
+      <tbody>
+        {% for row in jobs_all %}
+      <tr align="center">
+
+      <th ><a href="https://bo.internal.example.com/configuration/job/detail/{{row.SCHEDULED_JOB_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.JOB_NAME }} </i></a></th>        
+        <th>{{ row.SCHEDULED_JOB_ID }}</th>    
+        <th>{{ row.JOB_NAME }}</th>
+        <th>{{ row.JOB_DESCRIPTION }}</th> 
+        <th>{{ row.CHANGED_ON }}</th>    
+        <th>{{ row.EXECUTION_STATE_NAME }}</th>    
+        <th>{{ row.EXECUTION_DATETIME }}</th>    
+
+  
+        {% endfor %}
+
+      </tr>
+    </tbody> 
+    </table>
+
+  </div>
+  <button id="createXLSX">Export XLSX</button>
+  
+</div>
+{% endif %}
+
+</div>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+    // export excel 
+    var btn = document.getElementById("createXLSX");
+  var fileName = "export_error_jobs";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_jobs";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+  </script>
+
+{% endblock %}

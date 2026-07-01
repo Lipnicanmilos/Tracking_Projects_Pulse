@@ -1,0 +1,17 @@
+[
+    {
+        "model": "EETS_Lego",
+        "fields": {
+            "emails": [
+                "user@example.com",
+                "  igor.bokor@example.sk",
+                "  jakub.ress@example.sk",
+                " veronika.miklosova@example.sk",
+                " jan.mraz@example.sk"
+            ],
+            "run": "{\"hour\": \"8\", \"minute\": \"30\", \"day\": \"3\", \"month\": \"*\"}",
+            "head": "EMS EETS LEGO",
+            "body": "Dobry den \\n\\nObsahom tohto emailu je automaticky vygenerovany report v pr\u00edlohe. \\n\\nS pozdravom \\nPrevadzka App"
+        }
+    }
+]

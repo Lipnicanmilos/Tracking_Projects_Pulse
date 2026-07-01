@@ -1,0 +1,91 @@
+{% extends "eets/base.html" %}
+
+{% block body %}
+{% load static %}
+<body class="mt-4">
+    <div style="padding-left: 15px; padding-right: 15px;">
+        <h2 class="mb-4">Zoznam Issues z EMSW</h2>
+
+        <table id="issuesTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Kľúč</th>
+                    <th>Súhrn</th>
+                    <th>Status</th>
+                    <th>Riešiteľ</th>
+                    <th>Dátum vytvorenia</th>
+                    <th>Pôvodný reportér</th>
+                    <th>Plánovaná verzia</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for issue in issues %}
+                    <tr>
+                        <td>
+                            <a href="https://example.atlassian.net/browse/{{ issue.key }}" target="_blank">
+                                {{ issue.key }}
+                            </a>
+                        </td>
+                        <td>{{ issue.summary }}</td>
+                        <td>{{ issue.status }}</td>
+                        <td>{{ issue.assignee }}</td>
+                        <td>{{ issue.created }}</td>
+                        <td>{{ issue.original_reporter }}</td>
+                        <td>{{ issue.planned_release }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Kontajner pre export tlačidlá -->
+        <div class="d-flex justify-content-end mt-3" id="exportContainer"></div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- DataTables Buttons (Export) -->
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+    <!-- CSS pre tlačidlá -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+    <script>
+        $(document).ready(function () {
+            let table = $('#issuesTable').DataTable({
+                pageLength: 10,
+                order: [[4, "desc"]],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/sk.json"
+                },
+                // ⬇️ všimni si, že tu je aj "B" => DataTables vygeneruje tlačidlo exportu
+                dom: '<"row"<"col-sm-6"l><"col-sm-6 d-flex justify-content-end"f>>' +
+                     'rt' +
+                     '<"row mt-3"<"col-sm-6"i><"col-sm-6 d-flex justify-content-end"p>>' +
+                     'B',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Export do Excelu',
+                        className: 'btn btn-success',
+                        title: 'JIRA_Issues_Export',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ]
+            });
+
+            // Presunieme export tlačidlá dole do nášho kontajnera
+            table.buttons().container().appendTo('#exportContainer');
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

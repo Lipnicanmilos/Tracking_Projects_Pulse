@@ -1,0 +1,85 @@
+{% extends "base_ems.html" %}
+
+{% block body %}
+<meta charset="UTF-8">
+<title>Inativity</title>
+
+<div style="padding: 0 2rem;">
+
+{% if message %}
+<div style="background-color: #e2e3e5; padding: 0.5rem; margin: 1rem 0; border-left: 5px solid #6c757d; font-size: 0.95rem;">
+    {{ message|safe }}
+</div>
+{% endif %}
+
+<h1 style="font-family: Arial; color: #343a40;">
+    Automaticky proces generovania denných reportov:
+    <a href="https://example.sharepoint.com/teams/coo-infra/5230/Reporty/Forms/AllItems.aspx?id=%2Fteams%2Fcoo%2Dinfra%2F5230%2FReporty%2Fdenn%C3%A9%2F2025&viewid=80b843af%2D2112%2D4fe8%2Daa00%2Dda4cdb7f2cf3">
+        Sharepoint
+    </a>
+</h1>
+
+<h2 style="margin-top: 2rem; color: #495057;">🧾 Popis automatického generovania reportov</h2>
+<ol style="line-height: 1.6; font-size: 0.95rem; color: #343a40;">
+    <li>Vytvorí priečinok <strong>DDMMYYYY</strong> v <code>Reports/Daily</code></li>
+    <li>Zmaže priečinky staršie ako <strong>3 dni</strong></li>
+    <li>Spustí <strong>SQL skript</strong> a uloží výsledok do <code>.xlsx</code> súboru</li>
+    <li>Loguje každú akciu do súboru <code>auto.log</code></li>
+    <li>Nahrá vygenerovaný report na <strong>SharePoint</strong></li>
+</ol>
+
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+    <h2 style="margin: 0;">📝 Posledné logy zo súboru <code>auto.log</code>:</h2>
+    <form method="get" action="{% url 'work:daily_auto_log' %}">
+        <button type="submit" style="background-color: #6c757d; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px; cursor: pointer;">
+            📥 Stiahnuť celý auto.log
+        </button>
+    </form>
+</div>
+
+<div style="background-color: #f8f9fa; border: 1px solid #ccc; padding: 1rem; font-family: monospace; font-size: 0.9rem; max-height: 500px; overflow-y: auto;">
+    {% for line in log_lines %}
+        {{ line }}<br>
+    {% endfor %}
+</div>
+
+<h2>🛠️ Nastavenie Schedulera</h2>
+<form method="post" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+  {% csrf_token %}
+  <input type="hidden" name="update_scheduler" value="1">
+
+  <label>Hodina:</label>
+  <input type="text" name="hour" value="{{ current_run.hour }}" style="width: 60px; padding: 0.3rem; text-align: center;">
+
+  <label>Minúta:</label>
+  <input type="text" name="minute" value="{{ current_run.minute }}" style="width: 60px; padding: 0.3rem; text-align: center;">
+
+  <label>Deň:</label>
+  <input type="text" name="day" value="{{ current_run.day }}" style="width: 60px; padding: 0.3rem; text-align: center;">
+
+  <label>Mesiac:</label>
+  <input type="text" name="month" value="{{ current_run.month }}" style="width: 60px; padding: 0.3rem; text-align: center;">
+
+  <button type="submit" style="padding: 0.3rem 0.8rem;">💾 Uložiť nastavenie</button>
+</form>
+
+<div class="report-item" style="display: flex; align-items: center; padding: 1rem; gap: 10px;">
+    <span class="report-name">Nastavenie prístupu k SharePointu</span>
+    <a href="https://emstools.example.sk/edz/report_edz_podania_html" class="no-underline">
+        <button type="button" class="btn-action btn-edit" style="min-width: 100px; padding: 0.5rem 1rem;">Edit</button>
+    </a>
+</div>
+
+<hr style="margin: 2rem 0;">
+
+<h2>📂 Súbory a priečinky v <code>Reports/Daily</code></h2>
+
+<ul style="list-style-type: none; padding-left: 1rem;">
+  {% for item in file_tree %}
+    {% include "ems/partials/file_node.html" with node=item path="" %}
+  {% endfor %}
+</ul>
+
+</div>
+{% endblock %}

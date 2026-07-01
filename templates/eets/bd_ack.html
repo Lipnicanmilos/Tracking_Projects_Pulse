@@ -1,0 +1,289 @@
+{% extends "eets/base.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+            <div class="input-group" style="display: flex;">
+              <div class="input-group date" id='picker' style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                <input type="text" name="x" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;" />
+                <span class="input-group-addon" >
+                  <span class="glyphicon glyphicon-calendar"></span>	                 
+                </span>
+              </div>
+                <b> <p style="margin-top: 7px;"><</p> </b>
+                
+                  <div class="input-group date" id='picker2'  style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                    <input type="text" name="y" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;"
+                    class="form-control form-control-lg" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>	                 
+                    </span>
+                  </div>
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+
+<style>
+#table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+
+}
+  #table-scroll {
+    max-height:283px;
+    min-height:50px;
+    overflow:scroll;  
+    margin-top:20px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+      
+  </style>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7;float: left;">All billing data that do not have a confirmation response or are processed unsuccessfully.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+
+      <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>Nm.</th>
+          <th>BO_BillingDetail</th>
+          <th>BD_EDE_LOG_ID</th>
+          <th>BD_INTEGRATION_LOG_ID</th>
+          <th>BD_EDE_LOG_STATUS</th>
+          <th>BD_EDE_MESSAGE_TYPE</th>
+          <th>EETS_PROVIDER</th> 
+          <th>APDU_IDENTIFIER</th>
+          <th>DELIVERY_COUNTER</th>
+          <th>BD_CREATED_ON</th>
+          <th>BD_EXPORTED_ON</th>
+          <th>ACK_CREATED_ON</th>
+
+        </tr></thead>
+        <tbody >
+          {% for row in ack_None %}
+
+          <tr align="center">
+            <th>{{ forloop.counter }}</th>
+            <th ><a href="https://bo.internal.example.com/ecm/eetsexport/detail/?integrationLogId={{row.BD_INTEGRATION_LOG_ID}}" target="_blank"> <i style='color: forestgreen;'> BillingDetail {{row.BD_INTEGRATION_LOG_ID}} </i></a></th>    
+
+            <th style="color: red;">{{ row.BD_EDE_LOG_ID }}</th> 
+            <th style="color: red;">{{ row.BD_INTEGRATION_LOG_ID }}</th>    
+            <th style="color: red;">{{ row.BD_EDE_LOG_STATUS}}</th> 
+            <th style="color: red;">{{ row.BD_EDE_MESSAGE_TYPE}}</th> 
+            <th ><a href="https://bo.internal.example.com/ecm/eetsprovider/detail/?id={{row.EETS_PROVIDER_ID}}" target="_blank"> <i style='color: forestgreen;'> {{ row.EETS_PROVIDER}} </i></a></th>    
+            <th style="color: red;">{{ row.APDU_IDENTIFIER}}</th> 
+            <th style="color: red;">{{ row.DELIVERY_COUNTER}}</th> 
+            <th style="color: red;">{{ row.BD_CREATED_ON}}</th> 
+            <th style="color: red;">{{ row.BD_EXPORTED_ON}}</th> 
+            <th style="color: red;">{{ row.ACK_CREATED_ON}}</th> 
+            
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+  </div>
+  <button id="createXLSX">Export XLSX</button>
+</div>
+  
+  <div id="table-wrapper">
+    <div id="table-scroll">
+      <td colspan = "4"><b style="color: #337ab7;float: left;">All billing data generated in the last three days or searched by date and time.</b></td>
+      <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+      <br>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT
+          *
+      FROM
+          (
+              SELECT
+              bd.eets_provider_id as eets_provider_id,
+              bds.ede_log_status_name,
+                  bd.ede_log_id           AS bd_ede_log_id,
+                  bd.integration_log_id   AS bd_integration_log_id,
+                  bd.ede_log_status_code
+                  || '-'
+                  || bds.ede_log_status_name AS bd_ede_log_status,
+                  bd.ede_message_type_code || '-' ||  msl.EDE_MESSAGE_TYPE_NAME AS BD_EDE_MESSAGE_TYPE,
+                  bd.eets_provider_id
+                  || '-'
+                  || p.provider_number
+                  || '-'
+                  || p.provider_abbreviation AS eets_provider,
+                  TO_CHAR(bd.apdu_identifier) AS apdu_identifier,
+                  DELIVERY_COUNTER,
+                  TO_CHAR(from_tz(CAST(bd.created_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET', 'DD-MM-YYYY HH24:MI:SS') AS bd_created_on,
+                  TO_CHAR(from_tz(CAST(bd.exported_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET', 'DD-MM-YYYY HH24:MI:SS') AS bd_exported_on,
+                  TO_CHAR(from_tz(CAST(ack.created_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET', 'DD-MM-YYYY HH24:MI:SS') AS ack_created_on,
+                  /*CAST(ack.created_on AS TIMESTAMP) - CAST(bd.created_on AS TIMESTAMP) AS diff,*/
+                  Round((ack.created_on - bd.created_on) * 24,1) as diff_hours,
+                  Round((ack.created_on - bd.created_on) * 24 * 60,1) as diff_minutes,
+                  Round((ack.created_on - bd.created_on) * 24 * 60 * 60,1) as diff_seconds
+              FROM
+                  EETS_ede.ede_log            bd
+                  JOIN EETS_ede.ede_log_status_l   bds ON bd.ede_log_status_code = bds.ede_log_status_code AND bds.language_code = 'SK'
+                  JOIN EETS_ecm.eets_provider      p ON bd.eets_provider_id = p.eets_provider_id
+                  LEFT JOIN EETS_ede.ede_log            ack ON bd.ede_log_id = ack.referred_ede_log_id AND ack.ede_message_type_code = 1 AND ack.ede_log_status_code = 1
+                  LEFT JOIN EETS_ede.EDE_MESSAGE_TYPE_L msl on bd.EDE_MESSAGE_TYPE_CODE=msl.EDE_MESSAGE_TYPE_CODE and msl.LANGUAGE_CODE='SK'
+                                                  /*DELIVERY_COUNTER*/
+                  left join EETS_EDE.EDE_LOG lg on bd.EDE_LOG_ID=lg.EDE_LOG_ID
+                  LEFT JOIN  EETS_EDE.EDE_EXPORT ex on ex.EDE_LOG_ID=lg.EDE_LOG_ID
+              WHERE
+                  bd.ede_message_type_code = 4 
+                  and bd.created_on >= trunc(sysdate-7)
+          )
+      ORDER BY
+          BD_EDE_LOG_ID DESC
+                </p>
+        </div>
+      </div>
+        <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+          <thead>
+          <tr style="background-color: darkgrey; ">
+            <th>BO_BillingDetail</th>
+            <th>BD_EDE_LOG_ID</th>
+            <th>BD_INTEGRATION_LOG_ID</th>
+            <th>BD_EDE_LOG_STATUS</th>
+            <th>BD_EDE_MESSAGE_TYPE</th>
+            <th>EETS_PROVIDER</th> 
+            <th>APDU_IDENTIFIER</th>
+            <th>DELIVERY_COUNTER</th>
+            <th>BD_CREATED_ON</th>
+            <th>BD_EXPORTED_ON</th>
+            <th>ACK_CREATED_ON</th>
+            <th>DIFF</th>
+            <th>DIFF</th>
+            <th>DIFF</th>
+
+
+          </tr></thead>
+          <tbody>
+            {% for row in ack %}
+
+            {% if row.ACK_CREATED_ON == None %}
+            <tr align="center">
+              <th ><a href="https://bo.internal.example.com/ecm/eetsexport/detail/?integrationLogId={{row.BD_INTEGRATION_LOG_ID}}" target="_blank"> <i style='color: forestgreen;'> BillingDetail {{row.BD_INTEGRATION_LOG_ID}} </i></a></th>   
+              <th style="color: red;">{{ row.BD_EDE_LOG_ID }}</th> 
+              <th style="color: red;">{{ row.BD_INTEGRATION_LOG_ID }}</th>    
+              <th style="color: red;">{{ row.BD_EDE_LOG_STATUS}}</th> 
+              <th style="color: red;">{{ row.BD_EDE_MESSAGE_TYPE}}</th> 
+            <th ><a href="https://bo.internal.example.com/ecm/eetsprovider/detail/?id={{row.EETS_PROVIDER_ID}}" target="_blank"> <i style='color: forestgreen;'> {{ row.EETS_PROVIDER}} </i></a></th>    
+              <th style="color: red;">{{ row.APDU_IDENTIFIER}}</th>
+              <th style="color: red;">{{ row.DELIVERY_COUNTER}}</th> 
+              <th style="color: red;">{{ row.BD_CREATED_ON}}</th> 
+              <th style="color: red;">{{ row.BD_EXPORTED_ON}}</th> 
+              <th style="color: red;">{{ row.ACK_CREATED_ON}}</th> 
+              <th style="color: red;">{{ row.DIFF_HOURS}} </th> 
+              <th style="color: red;">{{ row.DIFF_MINUTES}} </th> 
+              <th style="color: red;">{{ row.DIFF_SECONDS}} </th>   
+            {% else %}
+
+          <tr align="center">
+            <th ><a href="https://bo.internal.example.com/ecm/eetsexport/detail/?integrationLogId={{row.BD_INTEGRATION_LOG_ID}}" target="_blank"> <i style='color: forestgreen;'> BillingDetail {{row.BD_INTEGRATION_LOG_ID}} </i></a></th>   
+            <th> {{ row.BD_EDE_LOG_ID }}</th> 
+            <th> {{ row.BD_INTEGRATION_LOG_ID }}</th>    
+            <th> {{ row.BD_EDE_LOG_STATUS}}</th> 
+            <th> {{ row.BD_EDE_MESSAGE_TYPE}}</th> 
+            <th ><a href="https://bo.internal.example.com/ecm/eetsprovider/detail/?id={{row.EETS_PROVIDER_ID}}" target="_blank"> <i style='color: forestgreen;'> {{ row.EETS_PROVIDER}} </i></a></th>    
+            <th> {{ row.APDU_IDENTIFIER}}</th> 
+            <th >{{ row.DELIVERY_COUNTER}}</th>
+            <th> {{ row.BD_CREATED_ON}}</th> 
+            <th> {{ row.BD_EXPORTED_ON}}</th> 
+            <th> {{ row.ACK_CREATED_ON}}</th>
+            <th> {{ row.DIFF_HOURS}} h</th> 
+            <th> {{ row.DIFF_MINUTES}} m</th> 
+            <th> {{ row.DIFF_SECONDS}} s</th>    
+
+            {% endif %}
+
+            {% endfor %}
+
+          </tr>
+        </tbody> 
+        </table>
+    </div>
+    <button id="createXLSX_2">Export XLSX</button>
+  </div>
+
+    <script type="text/javascript">
+       $('#picker').datetimepicker({
+  format: 'DD-MM-YYYY HH:mm:ss'
+      });
+      $('#picker2').datetimepicker({
+        format: 'DD-MM-YYYY HH:mm:ss'
+      });
+    </script>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+  // export excel 
+  var btn = document.getElementById("createXLSX");
+  var fileName = "export_bd_error";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_bd";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+  </script>
+
+
+{% endblock %}

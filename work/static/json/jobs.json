@@ -1,0 +1,48 @@
+[
+    {
+        "model": "my_job",
+        "fields": {
+            "emails": [
+                "user@example.com",
+                "user@example.com"
+            ],
+            "run": "{\"hour\": \"*\", \"minute\": \"5\", \"day\": \"*\", \"month\": \"*\"}"
+        }
+    },
+    {
+        "model": "paywell",
+        "fields": {
+            "run": "{\"hour\": \"10\", \"minute\": \"00\", \"day\": \"*\", \"month\": \"*\"}"
+        }
+    },
+    {
+        "model": "inactivity",
+        "fields": {
+            "emails": [
+                "user@example.com",
+                "diana.svabekova@example.com"
+            ],
+            "head": "Inactivity",
+            "body": "Dobry den \n\nObsahom tohto emailu je automaticky vygenerovany report v prilohe.\n https://emstools.example.sk/inactivity (SKT VPN, PROXY ON) \n\nS pozdravom \nPrevadzka App",
+            "run": "{\"hour\": \"13\", \"minute\": \"00\", \"day_of_week\": \"mon\"}"
+        }
+    },
+    {
+        "model": "daily_reports",
+        "fields": {
+            "run": "{\"hour\": \"09\", \"minute\": \"00\", \"day\": \"*\", \"month\": \"*\"}"
+        }
+    },
+    {
+        "model": "marketingove_statistiky",
+        "fields": {
+            "emails": [
+                "user@example.com",
+                " stefan.certik@example.com"
+            ],
+            "run": "{\"hour\": \"14\", \"minute\": \"05\", \"day\": \"02\", \"month\": \"*\"}",
+            "head": "Marketingove statistiky",
+            "body": "Dobry den \\n\\nObsahom tohto emailu je automaticky vygenerovany report v prilohe. \\n\\nS pozdravom \\nPrevadzka App"
+        }
+    }
+]

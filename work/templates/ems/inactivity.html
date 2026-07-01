@@ -1,0 +1,132 @@
+{% extends "base_ems.html" %}
+
+{% block body %}
+<meta charset="UTF-8">
+<title>Inativity</title>
+
+<div style="padding: 0 2rem;">
+
+{% if message %}
+<div style="background-color: #e2e3e5; padding: 0.5rem; margin: 1rem 0; border-left: 5px solid #6c757d; font-size: 0.95rem;">
+    {{ message|safe }}
+</div>
+{% endif %}
+
+
+<h1 style="font-family: Arial; color: #343a40;">Automaticky proces generovania reportu 4m a 6m prp:
+<a href="https://example.sharepoint.com/teams/coo-pos/5410/Zdielane%20dokumenty/Forms/AllItems.aspx?id=%2Fteams%2Fcoo%2Dpos%2F5410%2FZdielane%20dokumenty%2FInaktivita%5FPJ%2Fzdrojove%5Freporty&sortField=Modified&isAscending=false&viewid=5d5936f0%2D6755%2D40b5%2D99e0%2Da29bdb4b7814&e=5%3A8f8cb77fcaac41d29b63d72840ee3d68&FolderCTID=0x012000E2F5A662B4740A44B08925F9906320EB
+">Sharepoint</a>
+</h1>
+
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+    <h2 style="margin: 0;">📝 Posledné logy zo súboru <code>auto.log</code>:</h2>
+    <form method="get" action="{% url 'work:download_log' %}">
+        <button type="submit" style="background-color: #6c757d; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 3px; cursor: pointer;">
+            📥 Stiahnuť celý auto.log
+        </button>
+    </form>
+</div>
+
+
+<div style="background-color: #f8f9fa; border: 1px solid #ccc; padding: 1rem; font-family: monospace; font-size: 0.9rem; max-height: 500px; overflow-y: auto;">
+    {% for line in log_lines %}
+        {{ line }}<br>
+    {% endfor %}
+</div>
+
+
+
+<h2>🛠️ Nastavenie Schedulera a Príjemcov</h2>
+<form method="post" style="display: flex; flex-direction: column; gap: 1rem; background: #fff; padding: 1.5rem; border: 1px solid #ddd;">
+  {% csrf_token %}
+  <input type="hidden" name="update_scheduler" value="1">
+
+  <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+    <label>Hodina:</label>
+    <input type="text" name="hour" value="{{ current_run.hour }}" style="width: 60px; padding: 0.3rem;">
+
+    <label>Minúta:</label>
+    <input type="text" name="minute" value="{{ current_run.minute }}" style="width: 60px; padding: 0.3rem;">
+
+    <label>Deň v týždni:</label>
+    <input type="text" name="day_of_week" value="{{ current_run.day_of_week }}" style="width: 80px; padding: 0.3rem;">
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+    <label><strong>📧 Príjemcovia reportu (oddelení čiarkou):</strong></label>
+    <input type="text" name="emails" value="{{ current_emails }}" 
+           placeholder="email1@example.sk, email2@example.sk"
+           style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+    <small style="color: #666;">Príklad: m.lipnican@example.com, kolega@example.com</small>
+  </div>
+
+  <button type="submit" style="width: fit-content; padding: 0.5rem 1.5rem; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    💾 Uložiť všetky nastavenia
+  </button>
+</form>
+
+<div style="padding: 20px; background-color: #f9f9f9; border: 1px solid #ccc; width: fit-content; font-family: Arial, sans-serif;">
+    <h1>Hodnoty pre <code>day_of_week</code> v APScheduler:</h1>
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid black; padding: 8px; background-color: #f2f2f2;">Deň</th>
+            <th style="border: 1px solid black; padding: 8px; background-color: #f2f2f2;">Skratka</th>
+
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px;">Nedeľa</td>
+            <td style="border: 1px solid black; padding: 8px;"><code>sun</code></td>
+
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px;">Pondelok</td>
+            <td style="border: 1px solid black; padding: 8px;"><code>mon</code></td>
+
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px;">Utorok</td>
+            <td style="border: 1px solid black; padding: 8px;"><code>tue</code></td>
+
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px;">Streda</td>
+            <td style="border: 1px solid black; padding: 8px;"><code>wed</code></td>
+
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px;">Štvrtok</td>
+            <td style="border: 1px solid black; padding: 8px;"><code>thu</code></td>
+
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px;">Piatok</td>
+            <td style="border: 1px solid black; padding: 8px;"><code>fri</code></td>
+
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px;">Sobota</td>
+            <td style="border: 1px solid black; padding: 8px;"><code>sat</code></td>
+
+        </tr>
+    </table>
+</div>
+
+
+<div class="report-item" style="display: flex; align-items: center; padding: 1rem; gap: 10px;">
+    <span class="report-name">Nastavenie prístupu k SharePointu</span>
+    <a href="https://emstools.example.sk/edz/report_edz_podania_html" class="no-underline">
+        <button type="button" class="btn-action btn-edit" style="min-width: 100px; padding: 0.5rem 1rem;">Edit</button>
+    </a>
+</div>
+
+<h2>📂 Súbory a priečinky v <code>Reports/Daily</code></h2>
+
+<ul style="list-style-type: none; padding-left: 1rem;">
+  {% for item in file_tree %}
+    {% include "ems/partials/file_node_inactivity.html" with node=item path="" %}
+  {% endfor %}
+</ul>
+
+{% endblock %}

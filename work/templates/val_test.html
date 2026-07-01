@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block body %}
+{% load static %}
+
+<div class="content" style="padding-left: 15px; padding-right: 15px;">
+
+<h2 align="center">Validácia Billien SEM TEST</h2>
+
+<hr>
+<H3><b> WIKI:</b> https://example.atlassian.net/wiki/spaces/SAS/pages/5671494/Valid+cia+Billien+SEM+TEST</H3>
+
+<h3> Priklad Jira: </h3>
+<p> <b> Nasadenie: </b> https://example.atlassian.net/browse/SEMSO-494</p>
+<p> <b> Validácia: </b> https://example.atlassian.net/browse/ICTAP-258  <i> -- clone </i></p>
+<br>
+<P><B> SEM TEST certificates </B><a href="{% static 'data/cert_test.zip' %}"> 9900xx.zip </a> <i> --heslo je nazov certifikatu</i></P>
+
+<hr>
+
+<table class="table table-striped">
+    <thead>
+      <td colspan = "4"><b style="color: #337ab7;">I. BO</b></td>
+    <tr style="background-color: darkgrey;">
+      <th>#</th>
+      <th>Info</th>
+      <th>Action</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr align="center">
+      <th>1.</th>    
+      <th>Prihlasim sa do BO:</th>    
+      <th><a href="https://cis-host.sem.example.test/" target="_blank">https://cis-host.sem.example.test/</a></th>    
+    </tr>
+    <tr align="center">
+      <th>2.</th>    
+      <th>Skontrolujem verziu v pate stranky: Verze BO konzole:</th>    
+      <th>Verze BO konzole: 5.6.4.X Back-office</th>    
+    </tr>
+    <tr align="center">
+      <th>3.</th>    
+      <th>Priradim si vsetky dostupne role a odhlasim a prihlasim sa spat</th>    
+      <th><a href="https://cis-host.sem.example.test/security/user/" target="_blank">https://cis-host.sem.example.test/security/user/</a></th>      
+    </tr>
+    <tr align="center">
+      <th>4.</th>    
+      <th>Preklikam" vsetky GRIDy</th>    
+      <th></th>
+    </tr>
+    <tr align="center">
+      <th>5.</th>    
+      <th>Export MT: </th>    
+      <th><a href="https://cis-host.sem.example.test/customer-management/tolltransaction/?customerid=202&fromcustomer=True" target="_blank">https://cis-host.sem.example.test/customer-management/tolltransaction/?customerid=202&fromcustomer=True</a></th>      
+    </tr>
+    <tr align="center">
+      <th>5a.</th>    
+      <th>Vysledok exportu</th>    
+      <th><a href="https://cis-host.sem.example.test/my-documents/" target="_blank">https://cis-host.sem.example.test/my-documents/</a></th>      
+    </tr>
+    <tr align="center">
+      <th>6.</th>    
+      <th>Pustit nejaky report ci sa vygeneruje:</th>    
+      <th><a href="https://cis-host.sem.example.test/reporting/report/generate/1173/" target="_blank">https://cis-host.sem.example.test/reporting/report/generate/1173/</a></th>      
+    </tr>
+    <tr align="center">
+      <th>6a.</th>    
+      <th>Vysledok:</th>    
+      <th><a href="https://cis-host.sem.example.test/reporting/generatedreport/" target="_blank">https://cis-host.sem.example.test/reporting/generatedreport/</a></th>      
+    </tr>
+    <tr align="center">
+      <th>7.</th>    
+      <th>Kontrola pracovnych stanic urcenych pre TEST:</th>    
+      <th><a href="https://cis-host.sem.example.test/configuration/codebook/#Supporting.Workstation" target="_blank">https://cis-host.sem.example.test/configuration/codebook/#Supporting.Workstation</a></th>      
+    </tr>
+    <tr align="center">
+      <th>7a.</th>    
+      
+      <th></th>
+      <th><a href="{% static 'img/ws.png' %}" target="_blank"> <img src="{% static 'img/ws.png' %}" alt="image here"  style="widows: 250px;height:250px;"></a></th>    
+      <!-- <th><a href="https://cis-host.sem.example.test/configuration/codebook/#Supporting.Workstation" target="_blank">https://cis-host.sem.example.test/configuration/codebook/#Supporting.Workstation</a></th>       -->
+    </tr>
+    <th>8.</th>    
+    <th>Priradiť pracovnú stanicu 990007 VTK - napr WAG</th>    
+    <th><a href="https://cis-host.sem.example.test/fleet-cards/fleetcardissuer/edit/2/" target="_blank">https://cis-host.sem.example.test/fleet-cards/fleetcardissuer/edit/2/</a></th>      
+  </tr>
+  
+  </tbody> 
+  </tbody>
+</table>
+
+
+<hr>
+
+<table class="table table-striped">
+    <thead>
+      <td colspan = "4"><b style="color: #337ab7;">II. FO <i>(cert. 990010)</i> </b></td>
+    <tr style="background-color: darkgrey;">
+      <th>#</th>
+      <th>Info</th>
+      <th>Action</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr align="center">
+      <th>1.</th>    
+      <th>Prihlasim sa do FO:</th>    
+      <th><a href="https://cispos.sem.example.test/" target="_blank">https://cispos.sem.example.test/</a></th>    
+    </tr>
+    <tr align="center">
+      <th>2.</th>    
+      <th>Vytvorit novú registráciu</th>    
+      <th>(*potrebné mať funkčnú skenovaciu servisu)</th>    
+    </tr>
+    <tr align="center">
+      <th>3.</th>    
+      <th>Predplatenie mytneho pre ECV:</th>    
+      <th>VALIDAC2 v hotovosti</th>    
+    </tr>
+    <tr align="center">
+      <th>4.</th>    
+      <th>"preklikat" vsetky zalozky na detaile PV:</th>    
+      <th><a href="https://cispos.sem.example.test/customers/customer/detail/202/" target="_blank">https://cispos.sem.example.test/customers/customer/detail/202/</a></th>   
+    </tr>
+    <tr align="center">
+      <th>5.</th>    
+      <th>Vytvorit nove podanie: </th>    
+      <th><a href="https://cispos.sem.example.test/claims/claim/newclaim/?customerid=202" target="_blank">https://cispos.sem.example.test/claims/claim/newclaim/?customerid=202</a></th>   
+    </tr>
+    <tr align="center">
+      <th>6.</th>    
+      <th>Vytvorit detailny vypis MT: </th>    
+      <th><a href="https://cispos.sem.example.test/vehicles/vehicle/detail/?VehicleId=14813&AccountId=240602&CustomerId=202&BillId=&DocumentId=&ExemptionRequestNumber=&MainModelType=VehicleWithTollDuty#tolltransactions" target="_blank">https://cispos.sem.example.test/vehicles/vehicle/detail/?VehicleId=14813&AccountId=240602&CustomerId=202&BillId=&DocumentId=&ExemptionRequestNumber=&MainModelType=VehicleWithTollDuty#tolltransactions</a></th>   
+    </tr>
+    <tr align="center">
+      <th>7.</th>    
+      <th>"preklikat" detail MU:</th>    
+      <th><a href="https://cispos.sem.example.test/accounts/account/detail/?accountId=182202" target="_blank">https://cispos.sem.example.test/accounts/account/detail/?accountId=182202</a></th>   
+    </tr>
+    <tr align="center">
+      <th>8.</th>    
+      <th>"preklikat" detal vozidla: </th>    
+      <th><a href="https://cispos.sem.example.test/vehicles/vehicle/detail/?vehicleId=202" target="_blank">https://cispos.sem.example.test/vehicles/vehicle/detail/?vehicleId=202</a></th>   
+    </tr>
+    <tr align="center">
+      <th>9.</th>    
+      <th>"preklikat" doplnkove suzby: </th>    
+      <th><a href="https://cispos.sem.example.test/additionalservices/" target="_blank">https://cispos.sem.example.test/additionalservices/</a></th>   
+    </tr>
+    <tr align="center">
+      <th>10.</th>    
+      <th>vytvorit podanie neregistrovaneho povodcu: </th>    
+      <th><a href="https://cispos.sem.example.test/claims/claim/newclaimunregistered/" target="_blank">https://cispos.sem.example.test/claims/claim/newclaimunregistered/</a></th>   
+    </tr>
+    <tr align="center">
+      <th>11.</th>    
+      <th>Vypocitat podla trasy </th>    
+      <th><a href="https://cispos.sem.example.test/additionalservices/tollcalculator/" target="_blank">https://cispos.sem.example.test/additionalservices/tollcalculator/</a></th>   
+    </tr>
+    <tr align="center">
+      <th>12.</th>    
+      <th>Read Only "preklikat" Sklad:</th>    
+      <th><a href="https://cispos.sem.example.test/stockmanagement/" target="_blank">https://cispos.sem.example.test/stockmanagement/</a></th>   
+    </tr>
+    <tr align="center">
+      <th>13.</th>    
+      <th>Predbezne uzavriet pokladnu a uzavriet pokladnu:</th>    
+      <th><a href="https://cispos.sem.example.test/cashbox/" target="_blank">https://cispos.sem.example.test/cashbox/</a></th>   
+    </tr>
+    <tr align="center">
+      <th>*</th>    
+      <th>*ak nefunguje skenovacia servisa na RDP treba postupovať nasledovne:</th>    
+      <th>CHROME: do adresneho riadku: chrome://flags/
+        a potom vyhľadať #allow-insecure-localhost a dat Enable <BR>
+          FireFox : about:config <br>
+          1.security.tls.png "security.tls.version.enable"
+          <a href="{% static 'data/security.tls.png' %}" target="_blank"> <img src="{% static 'data/security.tls.png' %}" alt="image here"  style="widows: 250px;height:250px;"></a>
+          <br>
+          2.vynimka.png → localhost.png "https://localhost:8181" <br>
+          <a href="{% static 'data/vynimka.png' %}" target="_blank"> <img src="{% static 'data/vynimka.png' %}" alt="image here"  style="widows: 250px;height:250px;"></a>
+          <a href="{% static 'data/localhost.png' %}" target="_blank"> <img src="{% static 'data/localhost.png' %}" alt="image here"  style="widows: 250px;height:250px;"></a>
+        </th>   
+    </tr>
+  
+  </tbody> 
+  </tbody>
+</table>
+
+<hr>
+
+<table class="table table-striped">
+  <thead>
+    <td colspan = "4"><b style="color: #337ab7;">III. FCI <i>(cert. 990007)</i> </b></td>
+  <tr style="background-color: darkgrey;">
+    <th>#</th>
+    <th>Info</th>
+    <th>Action</th>
+
+  </tr>
+</thead>
+<tbody>
+  <tr align="center">
+    <th>1.</th>    
+    <th>prihlasim sa do FCI portalu:</th>    
+    <th><a href="https://fci-test.mytocz.eu/" target="_blank">https://fci-test.mytocz.eu/</a></th>    
+  </tr>
+  <tr align="center">
+    <th>2.</th>    
+    <th>preklikat vsetky GRIDy</th>    
+    <th></th>    
+  </tr>
+  
+</tbody> 
+</tbody>
+</table>
+
+<hr>
+
+<table class="table table-striped">
+  <thead>
+    <td colspan = "4"><b style="color: #337ab7;">IV. SC </b></td>
+  <tr style="background-color: darkgrey;">
+    <th>#</th>
+    <th>Info</th>
+    <th>Action</th>
+
+  </tr>
+</thead>
+<tbody>
+  <tr align="center">
+    <th>1.</th>    
+    <th>Prihlasit sa do SC: <i>"40000012014"/"HesLo_200."</i>
+      <br>SMS Test DB: <i> select * from CIS_AC.LOGIN_OTP where phone =+421914326073;</i>
+    </th>    
+    <th><a href="https://pup-test.mytocz.eu/selfcare/home/" target="_blank">https://pup-test.mytocz.eu/selfcare/home/</a></th>    
+  </tr>
+  <tr align="center">
+    <th>1a.</th>    
+    <th>Kontrola zakaznickeho profilu</th>    
+    <th><a href="https://cis-host.sem.example.test/customer-management/selfcaresupervisor/detail/?customerid=202" target="_blank">https://cis-host.sem.example.test/customer-management/selfcaresupervisor/detail/?customerid=202</a></th>    
+  </tr>
+  <tr align="center">
+    <th>2.</th>    
+    <th>Spravit vypis MT v PDF aj CSV:</th>    
+    <th><a href="https://pup-test.mytocz.eu/selfcare/customer/toll-transactions/" target="_blank">https://pup-test.mytocz.eu/selfcare/customer/toll-transactions/</a></th>    
+  </tr>
+  <tr align="center">
+    <th>3.</th>    
+    <th>Aktivovat sluzbu:</th>    
+    <th><a href="https://pup-test.mytocz.eu/selfcare/account/services/" target="_blank">https://pup-test.mytocz.eu/selfcare/account/services/</a></th>    
+  </tr>
+  <tr align="center">
+    <th>4.</th>    
+    <th>Vytvorit nove podanie:</th>    
+    <th><a href="https://pup-test.mytocz.eu/selfcare/claims/claim/" target="_blank">https://pup-test.mytocz.eu/selfcare/claims/claim/</a></th>    
+  </tr>
+  <tr align="center">
+    <th>5.</th>    
+    <th>Navýšiť mýto platobnou kartou:
+      <br> platobné karty na testovanie: <i>https://github.com/csob/paymentgateway/wiki/Testovac%C3%AD-karty</i>
+    </th>    
+    <th><a href="https://pup-test.mytocz.eu/selfcare/topup/ " target="_blank">https://pup-test.mytocz.eu/selfcare/topup/</a></th>    
+  </tr>
+  
+</tbody> 
+</tbody>
+</table>
+
+<hr>
+
+<table class="table table-striped">
+  <thead>
+    <td colspan = "4"><b style="color: #337ab7;">V. WT </b></td>
+  <tr style="background-color: darkgrey;">
+    <th>#</th>
+    <th>Info</th>
+    <th>Action</th>
+
+  </tr>
+</thead>
+<tbody>
+  <tr align="center">
+    <th>1.</th>    
+    <th>Prihlasit sa do WT:</th>    
+    <th><a href="https://ciswt.sem.example.test/" target="_blank">https://ciswt.sem.example.test/</a></th>    
+  </tr>
+</tbody> 
+</tbody>
+</table>
+
+</div>
+
+{% endblock %}

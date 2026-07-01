@@ -1,0 +1,155 @@
+{% extends "base_ems.html" %}
+
+{% block body %}
+<meta charset="UTF-8">
+<title>Doplnenie IČ DPH</title>
+
+<div style="padding: 0 2rem; font-family: 'Segoe UI', Arial, sans-serif;">
+
+    {% if message %}
+    <div style="background-color: #e2e3e5; padding: 1rem; margin: 1rem 0; border-left: 5px solid #6c757d; font-size: 0.95rem; border-radius: 4px;">
+        {{ message|safe }}
+    </div>
+    {% endif %}
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem;">
+        <h1 style="color: #343a40; margin: 0;">Doplnenie IČ DPH</h1>
+        <span style="background: #007bff; color: white; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">DWH Tool v2.0</span>
+    </div>
+    
+    <hr style="margin: 1.5rem 0;">
+
+<div style="background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; font-family: sans-serif;">
+    <h3 style="margin-top: 0; color: #0056b3; display: flex; align-items: center;">
+        <span style="margin-right: 10px;">ℹ️</span> Informácie o procese
+    </h3>
+    <p style="line-height: 1.6; color: #495057;">
+        Tento nástroj slúži na automatické obohatenie podkladov pre DPH o identifikačné údaje zákazníkov z databázy <strong>DWH (Billien)</strong>.
+    </p>
+    <ul style="line-height: 1.8; color: #495057; margin-bottom: 1.5rem;">
+        <li><strong>Nahrávanie:</strong> Nahrajte zdrojový Excel súbor (formát .xlsx) pomocou sekcie nižšie.</li>
+        <li><strong>Spracovanie:</strong> Tlačidlo <em>"Spracovávanie v DWH DB"</em> naimportuje dáta a prepojí ich s registrom zákazníkov (JOIN cez Customer Number).</li>
+        <li><strong>Výsledok:</strong> Systém vygeneruje nový súbor s predponou <strong>"final_"</strong>, ktorý obsahuje stĺpce: <em>Organization ID, Tax ID a VAT ID</em>.</li>
+        <li><strong>Kontrola:</strong> Priebeh a počet spracovaných riadkov môžete sledovať v reálnom čase v logu na spodku stránky.</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px solid #dee2e6; margin: 1.5rem 0;">
+
+    <h3 style="color: #0056b3; display: flex; align-items: center;">
+        <span style="margin-right: 10px;">📋</span> Kroky spracovania:
+    </h3>
+    
+    <div style="line-height: 1.6; color: #495057;">
+        <p style="margin-bottom: 10px;"><strong>1. Príprava prostredia (Clean-up):</strong><br>
+        Skontrolujte aktuálny obsah pracovného priečinka. Vymažte staré alebo nepotrebné súbory, aby nedošlo k duplicite dát.</p>
+
+        <p style="margin-bottom: 10px;"><strong>2. Import vstupných dát:</strong><br>
+        Nahrajte (Upload) aktuálny podkladový súbor vo formáte .xlsx (účtovného oddelenia).</p>
+
+        <p style="margin-bottom: 10px;"><strong>3. Spustenie transformácie (DWH):</strong><br>
+        Kliknite na tlačidlo pre spracovanie v databáze DWH. Systém v tomto kroku spustí validačné a výpočtové procedúry.</p>
+
+        <p style="margin-bottom: 0;"><strong>4. Export a stiahnutie:</strong><br>
+        Po dokončení spracovania (zvyčajne do niekoľkých sekúnd) sa vygeneruje výsledok. Stiahnite si hotový, pripravený finálny súbor pre ďalšie použitie.</p>
+    </div>
+</div>
+
+    <h2 style="color: #343a40; font-size: 1.5rem; margin-bottom: 1rem;">📂 Správa súborov</h2>
+    
+    <div style="background: white; border: 1px solid #e0e0e0; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <form method="post" enctype="multipart/form-data" style="margin-bottom: 1.5rem; display: flex; gap: 10px; align-items: center;">
+            {% csrf_token %}
+            <input type="file" name="excel_file" accept=".xlsx,.xls" required 
+                   style="padding: 8px; border: 1px dashed #ccc; border-radius: 4px; flex-grow: 1;">
+            <button type="submit" name="upload_excel" class="btn btn-success" style="white-space: nowrap;">
+                ➕ Upload Excel
+            </button>
+        </form>
+
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #f1f3f5; text-align: left;">
+                    <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">Názov súboru</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #dee2e6; width: 250px;">Akcie</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px;">
+                        {% if "final_" in file %}
+                            <strong style="color: #28a745;">📄 {{ file }}</strong>
+                        {% else %}
+                            <span style="color: #6c757d;">📄 {{ file }}</span>
+                        {% endif %}
+                    </td>
+<td style="padding: 12px; display: flex; gap: 8px; align-items: center;">
+    <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="filename" value="{{ file }}">
+        <button type="submit" name="download_file" class="btn btn-sm btn-outline-primary" title="Stiahnuť">
+            ⬇️ Stiahnuť
+        </button>
+    </form>
+
+    <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="filename" value="{{ file }}">
+        <button type="submit" name="delete_file" class="btn btn-sm btn-outline-danger" 
+                onclick="return confirm('Naozaj zmazať {{ file }}?');" title="Zmazať">
+            🗑 Zmazať
+        </button>
+    </form>
+</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" style="padding: 20px; text-align: center; color: #999;">
+                        V priečinku Reports/ICT_DPH sa nenachádzajú žiadne súbory.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin: 2rem 0; text-align: center; padding: 2rem; background: #e9ecef; border-radius: 8px;">
+        <h4 style="margin-bottom: 1rem;">Spustiť hromadné spracovanie</h4>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="connect_db" class="btn btn-primary btn-lg" style="padding: 12px 40px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                ⚙️ Spracovavanie v DWH DB
+            </button>
+        </form>
+        <p style="margin-top: 10px; font-size: 0.85rem; color: #6c757d;">
+            (Proces načíta všetky .xlsx súbory okrem tých s predponou final_)
+        </p>
+    </div>
+
+    <div style="margin-top: 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h3 style="color: #343a40; margin: 0;">📜 Systémový log (auto.log)</h3>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="download_log" class="btn btn-sm btn-secondary">
+                    ⬇️ Stiahnuť celý log
+                </button>
+            </form>
+        </div>
+        
+        <pre style="background: #212529; color: #f8f9fa; padding: 1.5rem; border-radius: 8px; max-height: 400px; overflow:auto; font-size: 0.85rem; border: 3px solid #dee2e6;">
+{% for line in log_lines %}{{ line }}{% endfor %}
+        </pre>
+    </div>
+
+    <br><br>
+</div>
+
+<style>
+    .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
+    tr:hover { background-color: #f8f9fa; }
+    pre::-webkit-scrollbar { width: 8px; }
+    pre::-webkit-scrollbar-thumb { background: #6c757d; border-radius: 4px; }
+</style>
+
+{% endblock %}

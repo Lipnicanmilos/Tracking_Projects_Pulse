@@ -1,0 +1,175 @@
+{% extends "base_ems.html" %}
+
+{% block body %}
+
+<div class="content" style="padding-left: 15px; padding-right: 15px;">
+<table class="table" style="table-layout: fixed;">
+    <h3 style="text-align:center">Web logs</h3>
+    <!-- <thead>
+      <tr>
+        <p>tetsasds</p>
+        <th > <p> Web logs </p></th>
+      </tr>
+    </thead> -->
+    <tbody>
+      <tr>
+        <th scope="row">BO-EMSAWEB01</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB01_bo_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB01_bo_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <th scope="row">BO-EMSAWEB02</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB02_bo_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB02_bo_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">POS-EMSAWEB01</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB01_pos_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB01_pos_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">POS-EMSAWEB02</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB02_pos_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB02_pos_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">CR-EMSAWEB01</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB01_cr_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB01_cr_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">CR-EMSAWEB02</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB02_cr_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB02_cr_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">FCI-EMSAWEB01</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB01_fci_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB01_fci_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">FCI-EMSAWEB02</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB02_fci_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB02_fci_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">SC-EMSAWEB01</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB01_sc_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB01_sc_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+      <tr>
+        <!-- <th scope="row">3</th> -->
+        <th scope="row">SC-EMSAWEB02</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAWEB02_sc_realtime.zip</td>
+        <td><a href="{% url 'work:EMSAWEB02_sc_realtime_web'  %}"><button>Web_Logs</button></a></td>
+      </tr>
+    </tbody>
+  </table>
+
+<hr>
+
+<table class="table" style="table-layout: fixed;">
+  <h3 style="text-align:center">APP logs</h3>
+  <tbody>
+    <tr>
+      <th scope="row">EMSAAPP01_realtime</th> 
+      <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAAPP01_realtime.zip</td>
+      <td><a href="{% url 'work:EMSAAPP01_realtime_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:EMSAAPP01_realtime_app'  %}"><button>App_Logs</button></a>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">EMSAAPP02_realtime</th> 
+      <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSAAPP02_realtime.zip</td>
+      <td><a href="{% url 'work:EMSAAPP02_realtime_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:EMSAAPP02_realtime_app'  %}"><button>App_Logs</button></a>  
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">EMSBAPP01_realtime</th> 
+      <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSBAPP01_realtime.zip</td>
+      <td><a href="{% url 'work:EMSBAPP01_realtime_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:EMSBAPP01_realtime_app'  %}"><button>App_Logs</button></a>  
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">EMSBAPP02_realtime</th> 
+      <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSBAPP02_realtime.zip</td>
+      <td><a href="{% url 'work:EMSBAPP02_realtime_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:EMSBAPP02_realtime_app'  %}"><button>App_Logs</button></a>  
+      </td>
+    </tr>
+    
+    <tr>
+      <th scope="row">EMSCAPP01_realtime</th> 
+      <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSCAPP01_realtime.zip</td>
+      <td><a href="{% url 'work:EMSCAPP01_realtime_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:EMSCAPP01_realtime_app'  %}"><button>App_Logs</button></a>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">EMSCAPP02_realtime</th> 
+      <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSCAPP02_realtime.zip</td>
+      <td><a href="{% url 'work:EMSCAPP02_realtime_error'  %}"><button>Error_Logs</button></a>
+       <a href="{% url 'work:EMSCAPP02_realtime_app'  %}"><button>App_Logs</button></a> 
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">EMSDAPP01_realtime</th> 
+      <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSDAPP01_realtime.zip</td>
+      <td><a href="{% url 'work:EMSDAPP01_realtime_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:EMSDAPP01_realtime_app'  %}"><button>App_Logs</button></a>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">EMSDAPP02_realtime</th> 
+      <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSDAPP02_realtime.zip</td>
+      <td><a href="{% url 'work:EMSDAPP02_realtime_error'  %}"><button>Error_Logs</button></a>
+        <a href="{% url 'work:EMSDAPP02_realtime_app'  %}"><button>App_Logs</button></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<table class="table" style="table-layout: fixed;">
+    <h3 style="text-align:center">IS logs</h3>
+    <tbody>
+      <tr>
+        <th scope="row">EMSISAPP01_realtime</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSISAPP01_realtime.zip</td>
+        <td><a href="{% url 'work:EMSISAPP01_realtime_error'  %}"><button>Error_Logs</button></a>
+          <a href="{% url 'work:EMSISAPP01_realtime_app'  %}"><button>App_Logs</button></a>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">EMSISAPP02_realtime</th> 
+        <td>SFTP: /srv/archive/log/upload-by-smbfs/billien-ems/temp/EMSISAPP02_realtime.zip</td>
+        <td><a href="{% url 'work:EMSISAPP02_realtime_error'  %}"><button>Error_Logs</button></a>
+          <a href="{% url 'work:EMSISAPP02_realtime_app'  %}"><button>App_Logs</button></a>
+        </td>
+      </tr>
+    </tbody>
+</table>
+
+<hr>
+<!-- <h3>ALL BackUp Logs<a href="{ url 'work:open_all_logs'  }" > <b>\\fileserver.internal.example.com\billien\CIS\</b></a></h3> -->
+
+{% comment %} <form action="\open_all_logs" method="">
+          <button class="btn-lg">OPEN: \\fileserver.internal.example.com\billien\CIS\</button>
+</form>
+<h4>\\fileserver.internal.example.com\billien\CIS</h4> {% endcomment %}
+<!-- target="_blank" -->
+
+<br>
+<br>
+</div>
+{% endblock %}

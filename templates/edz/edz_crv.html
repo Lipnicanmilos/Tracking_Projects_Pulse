@@ -1,0 +1,107 @@
+{% extends "edz/home_edz.html" %}
+
+{% comment %} {% load bootstrap_pagination %} {% endcomment %}
+{% comment %} {% load humanize %} {% endcomment %}
+{% load crispy_forms_tags %}
+
+
+{% block body %}
+
+<style>
+{% comment %} h6{
+	display:flex;
+} {% endcomment %}
+#right{
+	float:right;
+}
+</style>
+<ul class="alert-list">
+	{% for message in messages %}
+	  <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+	{% endfor %}
+  </ul>
+
+
+
+
+
+  {% block content %}
+
+  <h1>EDZ Report </h1>
+
+  <h2>Edit email Subject:</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <label for="head">Subject:</label>
+    <input type="text" name="head" value="{{ head }}">
+    <button type="submit">Save</button>
+</form>
+
+<h2>Edit email Body:</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <label for="body">Body <i>(novy riadok pridanim do textu \n)</i>: </label>
+  <input type="text" name="body" value="{{ body }}">
+  <button type="submit">Save</button>
+</form>
+
+  <h2>Emails:</h2>
+
+  <ul>
+
+  {% for email in emails %}
+
+    <li>{{ email }}</li>
+
+  {% endfor %}
+
+  </ul>
+
+  <h2>Edit Emails:</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <label for="emails">Emails:</label>
+    <input type="text" name="emails" value="{{ emails|join:', '|default:'' }}">
+    <button type="submit">Save</button>
+</form>
+
+  <h2>Edit Run:</h2>
+
+  <form method="post">
+
+    {% csrf_token %}
+
+    <label for="rune">Run:</label>
+
+    <input type="text" name="rune" value="{{ rune|default:'' }}">
+
+    <button type="submit">Save</button>
+
+  </form>
+
+  {% if username %}
+  <h2>Edit username and password on Sharepoint:</h2>
+ 
+  <form method="post">
+    {% csrf_token %}
+    <label for="username">username </i>: </label>
+    <input type="text" name="username" value="{{ username }}">
+    <button type="submit">Save</button>
+  </form>
+
+  
+  <form method="post">
+    {% csrf_token %}
+    <label for="password">password </i>: </label>
+    <input type="password" name="password" value="{{ password }}">
+    <button type="submit">Save</button>
+  </form>
+  {% endif %}
+
+{% endblock %}
+	
+	
+{% endblock %}
