@@ -1,14 +1,27 @@
 Django==4.1.7
 python-dotenv
 pytz
+python-dateutil
 django-crispy-forms
 django-jazzmin
 django-encrypted-model-fields
+django-cryptography
 APScheduler
 django-apscheduler
+# Reporty – Excel
 openpyxl
+XlsxWriter
+pandas
+# Reporty – PDF
+reportlab
+xhtml2pdf
+# Logy / SSH
+paramiko
+# Integrácie
 requests
 jira
 Office365-REST-Python-Client
+# Databázy
+pyodbc
 # cx_Oracle je potrebný len pri pripojení na Oracle (vyžaduje Oracle client)
 cx_Oracle

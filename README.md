@@ -34,11 +34,11 @@ logov, filtrovanie podľa typu a hromadné otvorenie logov naprieč servermi.
 |--------|----------|
 | **Web / admin** | Django 4.1, django-jazzmin, django-crispy-forms |
 | **Plánovanie** | APScheduler, django-apscheduler |
-| **Databázy** | cx_Oracle (Oracle), pyodbc, Django ORM (SQLite dev) |
+| **Databázy** | cx_Oracle (Oracle), pyodbc (SQL Server / ODBC), Django ORM (SQLite dev) |
 | **Reporty – Excel** | openpyxl, XlsxWriter, pandas |
 | **Reporty – PDF** | ReportLab, xhtml2pdf |
 | **Logy / SSH** | Paramiko |
-| **Integrácie** | requests + JIRA REST API, Office365-REST (SharePoint), smtplib/email |
+| **Integrácie** | jira + requests (JIRA REST API), Office365-REST (SharePoint), smtplib/email |
 | **Bezpečnosť** | encrypted-model-fields, django-cryptography, python-dotenv |
 
 ## Stromová štruktúra
