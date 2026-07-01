@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+    <div class="row" style="margin-right: 0px; margin-left: 0px;">
+        <div class="col-md-12 offset-2" >
+            <form action="">
+                <div class="input-group" style="display: flex;">
+                    <input type="text" name="q" placeholder="...find the username in the database..."
+                    class="form-control form-control-lg" />
+                    <div class="input-group-append">
+                        <button class="btn-lg">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+#table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+
+}
+#table-scroll {
+  max-height:283px;
+  min-height:50px;
+  overflow:scroll;  
+  margin-top:20px;
+}
+#table-wrapper table {
+  width:100%;
+
+}
+#table-wrapper table * {
+  /*background:yellow;*/
+  color:black;
+}
+#table-wrapper table thead th .text {
+  position:absolute;   
+  top:-20px;
+  z-index:2;
+  height:20px;
+  width:35%;
+  border:1px solid red;
+}
+td, th {
+    padding: 0px;
+    min-width: 0px; 
+    }
+</style>
+
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4" style="text-align:left;"> <b style="color: #337ab7; float: left;"> Users in table AD_USER.</b></td>
+    
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          select * from CIS_AC.AD_USER ORDER BY AD_CREATION_DATE desc;
+      
+                  </p>
+        </div>
+      </div>
+    </td>
+    <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+  <thead>
+  <tr style="background-color: darkgrey;">
+    <th>AD_USER_ID</th>
+    <th>USERNAME</th>
+    <th>SECURE_ID</th>
+    <th>AD_CREATION_DATE </th>
+    <th>DELETED_ON</th>
+    <th>ROLE</th>
+
+  </tr></thead>
+  <tbody>
+    {% for row in us %}
+  
+  <tr align="center">
+    <th>{{ row.AD_USER_ID}}</th>    
+    <th>{{ row.USERNAME}}</th>
+    <th>{{ row.SECURE_ID}}</th>
+    <th>{{ row.AD_CREATION_DATE | date:"d-m-Y G:i:s" }}</th>
+    <th>{{ row.DELETED_ON |date:"d-m-Y G:i:s" }}</th>
+    <th>{{ row.ROLE}}</th>
+
+    {% endfor %}
+  </tr>
+
+</tbody> 
+</table>
+
+</div>
+<button id="createXLSX">Export XLSX</button>
+
+</div>
+
+
+
+<br>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4">  <b style="color: #337ab7; float: left;"> Users in table USER_DETAIL. </b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button class="npk">Query</button>
+        <div class="dropdown-content"><p>
+          select * from CIS_AC.USER_DETAIL order by CREATION_DATETIME desc;
+                </p>
+        </div>
+      </div>
+    </td>
+<table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+    <thead>
+    <tr style="background-color: darkgrey;">
+      <th>BO Link</th>
+      <th>USER_ID</th>
+      <th>USERNAME</th>
+      <th>SECURE_ID</th>
+      <th>SELFCARE_USER_GROUP_ID</th>
+      <th>CREATION_DATETIME</th>
+      <th>EXPIRATION_DATE</th>
+      <th>DELETED_ON</th>
+      <th>ROLE</th>
+    </tr></thead>
+    <tbody>
+      {% for row in ud %}
+
+      {% if row.SELFCARE_USER_GROUP_ID == None %}
+      <tr align="center">
+        <th ><a href="https://cis-host.internal.example.com/security/user/detail/{{row.USER_ID}}" target="_blank"> <i style='color: forestgreen;'> BO {{ row.USER_NAME }} </i></a></th>    
+        <th>{{ row.USER_ID }}</th>    
+        <th>{{ row.USER_NAME }}</th>
+        <th>{{ row.SECURE_ID }}</th>
+        <th>{{ row.SELFCARE_USER_GROUP_ID }}</th>
+        <th>{{ row.CREATION_DATETIME |date:"d-m-Y G:i:s" }}</th>
+        <th>{{ row.EXPIRATION_DATE |date:"d-m-Y G:i:s" }}</th>
+        <th>{{ row.DELETED_ON |date:"d-m-Y G:i:s" }}</th>
+        <th>{{ row.ROLE }}</th>
+
+      {% else %} 
+
+    <tr align="center">
+      <th ><a href="https://cis-host.internal.example.com/customer-management/selfcaresupervisor/detail/?customerid={{row.SELFCARE_USER_GROUP_ID}}" target="_blank"> <i style='color: forestgreen;'>SC {{ row.USER_NAME }}</i></a></th> 
+      <th>{{ row.USER_ID }}</th>    
+      <th>{{ row.USER_NAME }}</th>
+      <th>{{ row.SECURE_ID }}</th>
+      <th>{{ row.SELFCARE_USER_GROUP_ID }}</th>
+      <th>{{ row.CREATION_DATETIME |date:"d-m-Y G:i:s" }}</th>
+      <th>{{ row.EXPIRATION_DATE |date:"d-m-Y G:i:s" }}</th>
+      <th>{{ row.DELETED_ON |date:"d-m-Y G:i:s" }}</th>
+      <th>{{ row.ROLE }}</th>
+
+      {% endif %}
+
+      {% endfor %}
+
+    </tr>
+  </tbody> 
+  </table>
+
+ 
+</div>
+<button id="createXLSX_2">Export XLSX</button>
+</div>
+
+<hr style="border-top: 3px solid black;">
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "6"> <b style="color: #337ab7;"> Query: <i>"SELECT * FROM CIS_CO.SCHEDULED_JOB"</i></b></td><br>
+    <td colspan = "3"> <b style="color: #337ab7;"> Query: <i>"SELECT * FROM CIS_CO.JOB_INSTANCE"</i></b></td>
+<table id="tab3" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+    <thead>
+
+    <tr style="background-color: darkgrey;">
+      <th>SCHEDULED_JOB_ID</th>
+      <th>JOB_NAME</th>
+      <th>JOB_DESCRIPTION</th>
+      <th>CHANGED_ON</th>
+      <th>EXECUTION_STATE_NAME</th>
+      <th>EXPECTED_NUMBER_OF_ITEMS</th>
+      <th>SUCCESSFULLY_PROCESSED_ITEMS</th>
+    </tr></thead>
+    <tbody>
+      {% for row in job %}
+    <tr align="center">
+      <th>{{ row.job_id }}</th>    
+      <th>{{ row.job_name }}</th>
+      <th>{{ row.job_description }}</th>
+      <th>{{ row.change_on |date:"d-m-Y H:i" }}</th>
+      {% endfor %}
+
+      {% for row in rows_ins %}
+      <th>{{ row.EXECUTION_STATE_NAME }}</th>
+      <th>{{ row.EXPECTED_NUMBER_OF_ITEMS }}</th>
+      <th>{{ row.SUCCESSFULLY_PROCESSED_ITEMS }}</th>
+    </tr>
+    {% endfor %}
+  </tbody> 
+  </table>
+</div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+  // export excel 
+  var btn = document.getElementById("createXLSX");
+  var fileName = "export_users_1";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_users";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+  </script>
+
+{% endblock %}

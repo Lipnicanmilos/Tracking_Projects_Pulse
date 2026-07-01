@@ -1,0 +1,15 @@
+<li style="margin: 0.25rem 0;">
+  {% if node.type == "directory" %}
+    📁 <strong>{{ node.name }}</strong>
+    <ul style="list-style-type: none; padding-left: 1.5rem;">
+      {% for child in node.children %}
+        {% include "ems/partials/file_node.html" with node=child path=path|add:node.name|add:'/' %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    📄 {{ node.name }}
+    <a href="{% url 'work:download_daily_file' path|add:node.name %}" style="margin-left: 0.5rem; font-size: 0.9rem; color: #007bff;" download>
+      ⬇️ Stiahnuť
+    </a>
+  {% endif %}
+</li>

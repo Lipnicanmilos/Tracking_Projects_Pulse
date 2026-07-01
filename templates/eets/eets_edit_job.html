@@ -1,0 +1,147 @@
+{% extends "eets/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+<style>
+    .form-section {
+        padding: 2rem 15%;
+        margin-bottom: 3rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-section h2 {
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: #343a40;
+    }
+
+    .form-group label {
+        font-weight: 500;
+    }
+
+    .btn-save {
+        background-color: #007bff;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 6px;
+        border: none;
+        margin-top: 0.5rem;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-save:hover {
+        background-color: #0056b3;
+    }
+
+    .alert-list {
+        list-style: none;
+        padding-left: 0;
+        margin: 1rem 15%;
+    }
+
+    .emails-list {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .emails-list li {
+        padding: 0.3rem 0;
+    }
+</style>
+
+<ul class="alert-list">
+    {% for message in messages %}
+        <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+
+<div class="form-section">
+    <h1>{{ head_info }}</h1>
+</div>
+
+<div class="form-section">
+    <h2>Edit Email Subject</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="head">Subject:</label>
+            <input type="text" name="head" class="form-control" value="{{ head }}">
+        </div>
+        <button type="submit" class="btn-save">Save</button>
+    </form>
+</div>
+
+<div class="form-section">
+    <h2>Edit Email Body</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="body">Body <i>(nový riadok: použite <code>\n</code>)</i>:</label>
+            <input type="text" name="body" class="form-control" value="{{ body }}">
+        </div>
+        <button type="submit" class="btn-save">Save</button>
+    </form>
+</div>
+
+<div class="form-section">
+    <h2>Emails</h2>
+    <ul class="emails-list">
+        {% for email in emails %}
+            <li>{{ email }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="form-section">
+    <h2>Edit Emails (comma separated)</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="emails">Emails:</label>
+            <input type="text" name="emails" class="form-control" value="{{ emails|join:', '|default:'' }}">
+        </div>
+        <button type="submit" class="btn-save">Save</button>
+    </form>
+</div>
+
+<div class="form-section">
+    <h2>Edit Run Command</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="rune">Run:</label>
+            <input type="text" name="rune" class="form-control" value="{{ rune|default:'' }}">
+        </div>
+        <button type="submit" class="btn-save">Save</button>
+    </form>
+</div>
+
+{% if username %}
+<div class="form-section">
+    <h2>SharePoint Credentials</h2>
+
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" name="username" class="form-control" value="{{ username }}">
+        </div>
+        <button type="submit" class="btn-save">Save</button>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" class="form-control" value="{{ password }}">
+        </div>
+        <button type="submit" class="btn-save">Save</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+
+{% block body %}
+<style>
+  #table-wrapper {
+    position:relative;
+    padding-bottom: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+  
+  }
+  #table-scroll {
+    max-height:283px;
+    min-height:50px;
+    overflow:scroll;  
+    margin-top:20px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+  
+  /*for meter track*/
+meter,
+meter::-webkit-meter-bar {
+    /*to remove the default background property */
+    background: none; 
+    width: 80;
+    height: 15px;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: rgb(226, 226, 226);
+    box-shadow: 0 5px 5px -5px rgba(0,0,0,0.3) inset;
+}
+ 
+/*for meter bar*/
+meter::-webkit-meter-optimum-value {
+    background: none; 
+    background-color: rgb(194, 36, 62);
+    
+}
+:-moz-meter-optimum::-moz-meter-bar {
+    background: none; 
+    background-color: rgb(194, 36, 62); 
+}
+ 
+ 
+meter::-webkit-meter-suboptimum-value{
+    background: none; 
+    background-color: rgb(154, 255, 77);
+    
+}
+:-moz-meter-sub-optimum::-moz-meter-bar{
+    background: none; 
+    background-color: rgb(154, 255, 77);
+}
+ 
+ 
+meter::-webkit-meter-even-less-good-value{
+    background: none;
+    background-color: rgb(70, 40, 222); 
+    
+}
+:-moz-meter-sub-sub-optimum::-moz-meter-bar{
+    background: none;
+    background-color: rgb(70, 40, 222);
+    
+}
+  </style>
+  <div class="content" style="padding-left: 15px; padding-right: 15px;">
+    
+    <h3>
+    {% load static %}
+    <P><B> Dokumentacia k DWH: </B><a href="{% static 'data/20200403_SEM_DWH_AdminGuid_v0.14.docx' %}"> 20200403_SEM_DWH_AdminGuid_v0.14.docx </a></P>
+  </h3>
+
+    <div id="table-wrapper">
+      <div id="table-scroll">
+        <td><h5 style="color: #337ab7"><b> ETL_LOADINGS</b></h5></td>
+        <td colspan = "4">  <b style="color: #337ab7; float: left;">Prehľadová tabuľka pre spracovanie do prezentačnej vrstvy je DWH_ETL.ETL_LOADINGS. </b></td>
+        <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+        <br>
+        <td>
+          <div class="dropdown">
+            <button class="npk">Query</button>
+            <div class="dropdown-content"><p>
+              SELECT LOAD_ID, LOAD_PARAM, 
+                    DECODE(LOAD_STATUS, 'W', 'W – upozornenie pri preskočenom loadingu', 'R', 'R – prebiehajúci', 'S', 'S – úspešne ukončený', 'E', 'E – chybne ukončený') LOAD_STATUS,
+                    LOAD_START, 
+                    LOAD_END,
+                    LOAD_NOTE, 
+                    'SQLDEV:GAUGE:0:24:0:22:' || ROUND(24*(to_date( NVL(LOAD_END, LOAD_START)) - to_date(LOAD_START)))
+                          AS chart_24h,
+                    ROUND(24*(to_date( NVL(LOAD_END, LOAD_START)) - to_date(LOAD_START)))|| ' h' as hh
+                    from DWH_ETL.ETL_LOADINGS de
+                    where LOAD_START > TRUNC(sysdate-10, 'DD') 
+                    order by LOAD_START desc</p>
+            </div>
+          </div>
+        </td>
+    <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          
+          <th> LOAD_ID </th>
+          <th> LOAD_PARAM </th>
+          <th> LOAD_STATUS </th>
+          <th> LOAD_START </th>
+          <th> LOAD_END </th>
+          <th> LOAD_NOTE </th>
+          <th> 0 - 24 </th>
+          <th> Duration </th>
+  
+        </tr></thead>
+        <tbody>
+          {% for row in ETL_LOADINGS  %}
+    
+          <tr align="center">
+            
+            <th>{{ row.LOAD_ID }}</th>    
+            <th>{{ row.LOAD_PARAM }}</th>
+            <th>{{ row.LOAD_STATUS }}</th>
+            <th>{{ row.LOAD_START |date:"d-m-Y G:i:s" }}</th>
+            <th>{{ row.LOAD_END |date:"d-m-Y G:i:s" }}</th>
+            <th>{{ row.LOAD_NOTE }}</th>
+            <th><meter value={{row.DIFF_HOURS}} min="0" max="24" low="10" high="20" optimum ="21" ></meter></th>
+            <th>{{ row.DIFF_HOURS }}</th>
+          {% endfor %}
+    
+        </tr>
+      </tbody> 
+      </table>
+    
+     
+    </div>
+    <button id="createXLSX">Export XLSX</button>
+    </div>
+
+    <div id="table-wrapper">
+      <div id="table-scroll">
+        <td><h5 style="color: #337ab7"><b> ETL_LOGS</b></h5></td>
+        <td colspan = "4">  <b style="color: #337ab7; float: left;">Detailné logy spracovania sú zapísane v tabulke DWH_ETL.ETL_LOGS. </b></td>
+        <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+        <br>
+        <td>
+          <div class="dropdown">
+            <button class="npk">Query</button>
+            <div class="dropdown-content"><p>
+              SELECT * FROM DWH_ETL.ETL_LOGS order by log_id desc</p>
+            </div>
+          </div>
+        </td>
+    <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>	LOG_ID		</th>
+          <th>	LOAD_ID		</th>
+          <th>	JOB_ID		</th>
+          <th>	JOB_NAME		</th>
+          <th>	LOG_DATE		</th>
+          <th>	MOD_NAME		</th>
+          <th>	LOG_TYPE		</th>
+          <th>	LOG_TEXT		</th>
+          <th>	LOG_STEP		</th>  
+        </tr></thead>
+        <tbody>
+          {% for row in dwh_logs %}
+        
+        <tr align="center">
+            <th>{{ row.LOG_ID	}}</th>
+            <th>{{ row.LOAD_ID	}}</th>
+            <th>{{ row.JOB_ID	}}</th>
+            <th>{{ row.JOB_NAME	}}</th>
+            <th>{{ row.LOG_DATE | date:"d-m-Y G:i:s"	}}</th>
+            <th>{{ row.MOD_NAME	}}</th>
+            <th>{{ row.LOG_TYPE	}}</th>
+            <th>{{ row.LOG_TEXT	}}</th>
+            <th>{{ row.LOG_STEP	}}</th>
+            
+          {% endfor %}
+        </tr>
+      
+    </tbody> 
+      </table>
+    
+     
+    </div>
+    <button id="createXLSX_2">Export XLSX</button>
+    </div>
+
+  <div id="table-wrapper">
+
+    <div id="table-scroll">
+      <td><h5 style="color: #337ab7"><b>ETL_PROCESSING_OVERVIEW</b></h5></td>
+      <td colspan = "4">  <b style="color: #337ab7; float: left;">V tejto tabuľke je uložený jeden záznam pre každú jednu schému, za každý beh prenosu.</b></td>
+       
+      <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_3" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+      <br>
+      <td>
+        <div class="dropdown">
+          <button>Query</button>
+          <div class="dropdown-content"><p>
+            SELECT 
+            ETL_LOAD_ID,
+            STG_SCHEMA_NAME,
+            SRC_LOADING_START,
+            SRC_LOADING_END,
+            DECODE(SRC_LOADING_STATUS, 3, '3 - chyba', 2, '2 - úspešne ukončené', 1, '1 - beží') SRC_LOADING_STATUS,
+            PART_LOADING_START,
+            PART_LOADING_END,
+            DECODE(PART_LOADING_STATUS, 3, '3 - chyba', 2, '2 - úspešne ukončené', 1, '1 - beží') PART_LOADING_STATUS,
+            STAGE_LOADING_START,
+            STAGE_LOADING_END,
+            DECODE(STAGE_LOADING_STATUS, 3, '3 - chyba', 2, '2 - úspešne ukončené', 1, '1 - beží') STAGE_LOADING_STATUS
+            from DWH_ETL.ETL_PROCESSING_OVERVIEW where SRC_LOADING_START > TRUNC(sysdate-3, 'DD') ORDER BY SRC_LOADING_START desc</p>
+          </div>
+        </div>
+      </td>
+      <table  id="tab3" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th> ETL_LOAD_ID </th>
+          <th> STG_SCHEMA_NAME </th>
+          <th> SRC_LOADING_START </th>
+          <th> SRC_LOADING_END </th>
+          <th> SRC_LOADING_STATUS </th>
+          <th> PART_LOADING_START </th>
+          <th> PART_LOADING_END </th>
+          <th> PART_LOADING_STATUS </th>
+          <th> STAGE_LOADING_START </th>
+          <th> STAGE_LOADING_END </th>
+          <th> STAGE_LOADING_STATUS </th>
+    
+        
+        </tr></thead>
+        <tbody>
+          {% for row in etl_processing_overview %}
+        
+        <tr align="center">
+          <th> {{ row.ETL_LOAD_ID }} </th>
+          <th> {{ row.STG_SCHEMA_NAME }} </th>
+          <th> {{ row.SRC_LOADING_START | date:"d-m-Y G:i:s" }} </th>
+          <th> {{ row.SRC_LOADING_END | date:"d-m-Y G:i:s" }} </th>
+          <th> {{ row.SRC_LOADING_STATUS }} </th>
+          <th> {{ row.PART_LOADING_START | date:"d-m-Y G:i:s" }} </th>
+          <th> {{ row.PART_LOADING_END | date:"d-m-Y G:i:s" }} </th>
+          <th> {{ row.PART_LOADING_STATUS }} </th>
+          <th> {{ row.STAGE_LOADING_START | date:"d-m-Y G:i:s" }} </th>
+          <th> {{ row.STAGE_LOADING_END | date:"d-m-Y G:i:s" }} </th>
+          <th> {{ row.STAGE_LOADING_STATUS }} </th>  
+           
+          {% endfor %}
+        </tr>
+      
+    </tbody> 
+    </table>
+  
+  </div>
+  <button id="createXLSX_3">Export XLSX</button>
+  
+  </div>
+  
+  <br>
+
+  <div id="table-wrapper">
+
+    <div id="table-scroll">
+      <td><h5 style="color: #337ab7"><b>ETL_TRACE_LOG</b></h5></td>
+      <td colspan = "4">  <b style="color: #337ab7; float: left;">Do tabuľky etl_trace_log sú zaznamenávané detailné informácie o behu prenosu.</b></td>
+       
+      <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_4" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+      <br>
+      <td>
+        <div class="dropdown">
+          <button>Query</button>
+          <div class="dropdown-content"><p>
+            SELECT 
+            ETL_TRACE_LOG_ID,
+            ETL_LOAD_ID,
+            CONFIG_ID,
+            PACKAGE_NAME,
+            PROCEDURE_NAME,
+            LINE_NUMBER,
+            SOURCE_DB_LINK,
+            SOURCE_TABLE_OWNER,
+            SOURCE_TABLE_NAME,
+            RUN_UNDER_SCHEMA,
+            CURRENT_SCHEMA,
+            TARGET_TABLE_OWNER,
+            TARGET_TABLE_NAME,
+            DECODE(LOG_TYPE_SEVERITY, 5, '5-chyba', 4, '4-upozornenie', 3, '3-informacia', 2, '2-odladovacie zaznamy', 1, '1-evidencia zaciatku a konca procedur') LOG_TYPE_SEVERITY,                     
+            LOG_TIMESTAMP,
+            LOG_MESSAGE_SHORT,
+            LOG_MESSAGE
+            FROM
+            DWH_ETL.ETL_TRACE_LOG 
+            where LOG_TIMESTAMP > trunc(sysdate,'DD')
+            order by LOG_TIMESTAMP desc  
+          </div>
+        </div>
+      </td>
+      <table  id="tab4" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>ETL_TRACE_LOG_ID</th>
+          <th>ETL_LOAD_ID</th>
+          <th>CONFIG_ID</th>
+          <th>PACKAGE_NAME</th>
+          <th>PROCEDURE_NAME</th>
+          <th>LINE_NUMBER</th>
+          <th>SOURCE_DB_LINK</th>
+          <th>SOURCE_TABLE_OWNER</th>
+          <th>SOURCE_TABLE_NAME</th>
+          <th>RUN_UNDER_SCHEMA</th>
+          <th>CURRENT_SCHEMA</th>
+          <th>TARGET_TABLE_OWNER</th>
+          <th>TARGET_TABLE_NAME</th>
+          <th>LOG_TYPE_SEVERITY</th>
+          <th>LOG_TIMESTAMP</th>
+          <th>LOG_MESSAGE_SHORT</th>
+          <th>LOG_MESSAGE</th>
+
+    
+        
+        </tr></thead>
+        <tbody>
+          {% for row in ETL_TRACE_LOG %}
+        
+        <tr align="center">
+          <th> {{ row.ETL_TRACE_LOG_ID }} </th>
+          <th> {{ row.ETL_LOAD_ID }} </th>
+          <th> {{ row.CONFIG_ID }} </th>
+          <th> {{ row.PACKAGE_NAME }} </th>
+          <th> {{ row.PROCEDURE_NAME }} </th>
+          <th> {{ row.LINE_NUMBER }} </th>
+          <th> {{ row.SOURCE_DB_LINK }} </th>
+          <th> {{ row.SOURCE_TABLE_OWNER }} </th>
+          <th> {{ row.SOURCE_TABLE_NAME }} </th>
+          <th> {{ row.RUN_UNDER_SCHEMA }} </th>
+          <th> {{ row.CURRENT_SCHEMA }} </th>
+          <th> {{ row.TARGET_TABLE_OWNER }} </th>
+          <th> {{ row.TARGET_TABLE_NAME }} </th>
+          <th> {{ row.LOG_TYPE_SEVERITY }} </th>
+          <th> {{ row.LOG_TIMESTAMP | date:"d-m-Y G:i:s"  }} </th>
+          <th> {{ row.LOG_MESSAGE_SHORT }} </th>
+          <th> {{ row.LOG_MESSAGE }} </th>
+        
+           
+          {% endfor %}
+        </tr>
+      
+    </tbody> 
+    </table>
+  
+  </div>
+  <button id="createXLSX_4">Export XLSX</button>
+  
+  </div>
+
+</div>
+<button id="createXLSX_all">Export XLSX</button>
+</div>
+
+</div>
+  
+  <script>
+    
+    $(document).ready(function(){
+      $("#myInput_1").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tab1 tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+      $("#myInput_2").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tab2 tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+      $("#myInput_3").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tab3 tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+      $("#myInput_4").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tab4 tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  
+    // export excel 
+    var btn = document.getElementById("createXLSX");
+    var fileName = "export_ETL_LOADINGS";
+    var fileType = "xlsx";
+    btn.addEventListener("click", function() {
+      var table = document.getElementById("tab1");
+      var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+      return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+    });
+    
+    
+    var btn = document.getElementById("createXLSX_2");
+    var fileName2 = "export_ETL_LOGS";
+    var fileType = "xlsx";
+    btn.addEventListener("click", function() {
+      var table = document.getElementById("tab2");
+      var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+      return XLSX.writeFile(wb, null || fileName2 + "." + (fileType || "xlsx"));
+    });
+
+    
+    var btn = document.getElementById("createXLSX_3");
+    var fileName3 = "export_ETL_PROCESSING_OVERVIEW";
+    var fileType = "xlsx";
+    btn.addEventListener("click", function() {
+      var table = document.getElementById("tab3");
+      var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+      return XLSX.writeFile(wb, null || fileName3 + "." + (fileType || "xlsx"));
+    });
+
+    
+    var btn = document.getElementById("createXLSX_4");
+    var fileName4 = "export_ETL_TRACE_LOG";
+    var fileType = "xlsx";
+    btn.addEventListener("click", function() {
+      var table = document.getElementById("tab4");
+      var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+      return XLSX.writeFile(wb, null || fileName4 + "." + (fileType || "xlsx"));
+    });
+
+    var btn = document.getElementById("createXLSX_all");
+    var fileName4 = "export_all";
+    var fileType = "xlsx";
+    btn.addEventListener("click", function() {
+    var table1 = document.getElementById("tab3");
+    var table2 = document.getElementById("tab2");
+    const ws = XLSX.utils.json_to_sheet(table1);
+    var ws2 = XLSX.utils.json_to_sheet(table2);
+    const wb = XLSX.utils.book_new();
+    const sheet1 = XLSX.utils.book_append_sheet(wb, ws, "Name of Sheet1");
+    const shee2 = XLSX.utils.book_append_sheet(wb, ws2, "Name of Sheet2");
+    return XLSX.writeFile(wb, "Output_filename.xlsx");
+    })
+    ;
+
+    </script>
+  
+  {% endblock %}

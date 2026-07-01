@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    {% load static %}
+    {% block head %}
+    <meta charset="utf-8">
+
+    <title>TPP</title>
+    <!-- <link rel="icon" href="" type="image/x-icon"> -->
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+    <meta name="author" content="Milos User">
+    <meta name="keywords" content="SEM, Django, Python, WebApp">
+    <meta name="description" content="Creating a application using Python-Django">
+    <!-- <meta http-equiv="refresh" content="240"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/tablesorter.css' %}">
+
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/graph.js' %}"></script>
+
+    <script src="{% static 'js/my_table_sortable.js' %}"></script>
+
+    <!-- bootstrap-datetimepicker -->
+    <script src="{% static 'datetimepicker/jquery.js' %}"></script>
+    <!-- <script src="{% static 'datetimepicker/moment-with-locales.min.js' %}" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <script src="{% static 'datetimepicker/moment-with-locales.min.js' %}"></script>
+    <script src="{% static 'datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'datetimepicker/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'datetimepicker/bootstrap-datetimepicker.min.css' %}">
+
+    <!-- jquery_tab_sort -->
+    <!-- <script src="{% static 'js/jquery_tab_sort/3.3.1_jquery.min.js' %}"></script> -->
+    <script src="{% static 'js/jquery_tab_sort/query_tablesorter.js' %}"></script>
+
+    <!-- jquery_export_excel -->
+    <script src="{% static 'js/export_xlsx.js' %}"></script>
+
+
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- <script type="text/javascript" src="{% static 'weblog_app/livesearch.js' %}"></script> -->
+    <style>
+        #table-wrapper {
+          position:relative;
+          padding-bottom: 20px;
+          padding-left: 5px;
+          padding-right: 5px;
+        
+        }
+          #table-scroll {
+            max-height:550px;
+            min-height:50px;
+            overflow:scroll;  
+            margin-top:5px;
+          }
+          #table-wrapper table {
+            width:100%;
+          
+          }
+          #table-wrapper table * {
+            /*background:yellow;*/
+            color:black;
+          }
+          #table-wrapper table thead th .text {
+            position:absolute;   
+            top:-20px;
+            z-index:2;
+            height:20px;
+            width:35%;
+            border:1px solid red;
+          }
+          td, th {
+              padding: 0px;
+              min-width: 0px; 
+              }
+          
+          .wrap-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: hidden;
+  max-width: 450px;
+  padding-left: 5px;
+}
+              
+          </style>
+
+
+    {% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="background-color:rgb(10, 84, 157); /*border-color: greenyellow;*/ margin-bottom: 0px;">
+        <div class="container">
+          <div class="navbar-header" style="margin-top: 14px;">
+            <a href="{% url 'work:preface' %}" style="
+                margin-right: 0px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+                background-color: transparent;
+                background-image: none;
+                border: 1px solid transparent;
+                border-radius: 4px;
+                margin-left: 10px;">
+                <img src="{% static '/img/header-logo.png' %}" alt="logo_ems" style="width: 53px; height: auto; padding-bottom: 16px;">
+              </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                          <span class="sr-only">Toggle navigation</span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                      </button>
+          </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              
+            <li><a href="{% url 'work:hpsm_i'  %}">Incidents</a></li>
+            <li><a href="{% url 'work:hpsm_c'  %}">Changes</a></li>
+            <li><a href="{% url 'work:info_log'  %}">Info Log</a></li>
+
+            
+
+          </ul>
+        </div>      
+        </div>
+    </nav>   
+      
+    
+    <div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+      <div class="row" style="margin-right: 0px; margin-left: 0px;">
+          <div class="col-md-12 offset-2" >
+              <form action="">
+                  <div class="input-group" style="display: flex;">
+                      <input type="text" name="q" placeholder="LIKE IN BRIEF_DESCRIPTION DESCRIPTION UPDATE_ACTION CLOSING_COMMENTS"
+                      class="form-control form-control-lg" />
+                      <div class="input-group-append">
+                          <button class="btn-lg">Search</button>
+                      </div>
+                  </div>
+              </form>
+          </div>
+      </div>
+    </div>
+
+    
+
+  <div class="container mb-5" id="table-wrapper">
+  <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
+    <h5 class="text-primary mb-2">INC ASSIGNMENT: Prevadzka App</h5>
+    <div class="form-inline mb-2">
+      <label for="myInput_1" class="mr-2">Filter:</label>
+      <input id="myInput_1" class="form-control form-control-sm" type="text" placeholder="Search...">
+    </div>
+  </div>
+
+  <!-- Query Dropdown -->
+  <div class="dropdown mb-3">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+      Zobraziť SQL Query
+    </button>
+    <div class="dropdown-menu p-3 text-monospace small" style="white-space: pre-wrap; max-width: 700px;">
+      SELECT *, DATEADD(hour, 2, ORIG_DATE_ENTERED)<br>
+      FROM dbo.CM3RM1 ch<br>
+      WHERE ASSIGNED_TO IS NULL<br>
+      AND ASSIGN_DEPT = 'Prevadzka App'<br>
+      AND STATUS != 'CLOSED'<br>
+      ORDER BY ORIG_DATE_ENTERED DESC
+    </div>
+  </div>
+
+  <!-- Scrollable Table -->
+  <div id="table-scroll">
+    <table id="tab1" class="table table-bordered table-hover table-sm text-center">
+      <thead class="thead-dark">
+        <tr>
+          <th>Nm.</th>
+          <th>ID</th>
+          <th>OPEN_TIME</th>
+          <th>PRIO</th>
+          <th>PROJECT</th>
+          <th>Title DESCRIPTION</th>
+          <th>ACTIVITIES</th>
+          <th>RESOLUTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in APP_INC %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ row.NUMBER }}</td>
+          <td style="white-space: nowrap;">{{ row.My_time }}</td>
+          <td>{{ row.PRIORITY_CODE }}</td>
+          <td>{{ row.SKT_PROJECT }}</td>
+          <td class="wrap-text">{{ row.BRIEF_DESCRIPTION }}<br>{{ row.DESCRIPTION }}</td>
+          <td class="wrap-text">{{ row.UPDATE_ACTION }}</td>
+          <td class="wrap-text">{{ row.CLOSING_COMMENTS }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <button id="createXLSX" class="btn btn-warning mt-3">Export XLSX</button>
+</div>
+  
+      <script>
+    function change_pass1(){
+        document.getElementById('pass1').style.cssText = '-webkit-text-security: none';
+    }
+    function change_pass2(){
+        document.getElementById('pass2').style.cssText = '-webkit-text-security: none';
+    }
+</script>
+
+
+
+</div>
+
+
+<script>
+    $(document).ready(function(){
+      $("#myInput_1").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tab1 tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+      $("#myInput_2").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#tab2 tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  
+    // export excel 
+    var btn = document.getElementById("createXLSX");
+    var fileName = "export_inc_app";
+    var fileType = "xlsx";
+    btn.addEventListener("click", function() {
+      var table = document.getElementById("tab1");
+      var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+      return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+    });
+    
+    var btn = document.getElementById("createXLSX_2");
+    var fileName1 = "export_bd";
+    var fileType = "xlsx";
+    btn.addEventListener("click", function() {
+      var table = document.getElementById("tab2");
+      var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+      return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+    });
+    </script>

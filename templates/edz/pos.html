@@ -1,0 +1,277 @@
+{% extends "edz/home_edz.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+            <div class="input-group" style="display: flex;">
+              <input type="text" name="posid" placeholder="pos number required !!!" class="form-control form-control-lg" style="margin: 0px; max-width: 280px" />
+              <div class="input-group date" id='picker' style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                <input type="text" name="x" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;" />
+                <span class="input-group-addon" >
+                  <span class="glyphicon glyphicon-calendar"></span>	                 
+                </span>
+              </div>
+                <b> <p style="margin-top: 7px;"><</p> </b>
+                
+                  <div class="input-group date" id='picker2'  style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                    <input type="text" name="y" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;"
+                    class="form-control form-control-lg" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>	                 
+                    </span>
+                  </div>
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<style>
+#table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+  #table-scroll {
+    height:283px;
+    overflow:scroll;  
+    margin-top:20px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+  </style>
+  
+  <div id="table-wrapper">
+    {% comment %} <td colspan = "4"><b style="color: #337ab7;">Jobs that are not successful or EXPECTED_NUMBER_OF_ITEMS!=SUCCESSFULLY_PROCESSED_ITEMS for the last three days.</b></td> {% endcomment %}
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          select 
+          rp.retail_partner_name,
+          po.pos_number,
+          po.pos_name,
+          pay.payment_amount,
+          met.PAYMENT_METHOD_NAME,
+          pay.date_of_payment,
+          pay.variable_symbol,
+          pay.pos_operator_username,
+          pay.PAYMENT_ID
+          from 
+          edz_co.retail_partner rp
+          left join edz_co.pos po on rp.retail_partner_id = po.retail_partner_id
+          left join edz_ar.payment pay on pay.cash_box_id like CONCAT( po.pos_number ,'%')
+          left join edz_ar.payment_method_l met on pay.payment_method_code = met.PAYMENT_METHOD_CODE and met.language_code = 'SK'
+          where po.POS_NUMBER=5205
+          and pay.date_of_payment>= to_date('25-01-2024 22:33:02', 'DD-MM-YYYY HH24:MI:SS')
+          and pay.date_of_payment<= ('27.01.24')
+          order by pay.date_of_payment desc
+                  </p>
+        </div>
+      </div>
+    </td>
+    <div id="table-scroll">
+        <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+
+      <!-- <h3 style="text-align: center;">Jobs</h3> -->
+
+      <!-- <table id="sortTable" class="table table-hover sortable" style="display: block; overflow-x: auto; white-space: nowrap; border: ridge;"> -->
+        <thead>
+        <tr style="background-color: darkgrey;">
+          {% comment %} <th>POS Link</th> {% endcomment %}
+          <th>POS_ID</th>
+          <th>POS_NUMBER</th>
+          <th>POS_NAME</th>
+          <th>POS PRIORITY</th>
+          <th>RETAIL_PARTNER_ID</th>
+          <th>RETAIL_PARTNER_NAME</th>
+          <th>POS_TYPE</th>
+          
+        </tr></thead>
+        <tbody>
+          {% for row in pos_all %}
+        <tr align="center">
+
+          {% comment %} <th ><a href="https://bo.eznamka.sk/configuration/pos/detail/?id={{row.POS_ID}}" target="_blank"> <i style='color: forestgreen;'> BO Link </i></a></th>   {% endcomment %}
+          {% comment %} <th style="color: red;">{{ row.ACTION_DATETIME |date:"d-m-Y G:i:s" }}</th>  {% endcomment %}
+          
+          <th >{{row.POS_ID}} </i></a></th>    
+          <th >{{ row.POS_NUMBER }}</th>
+          <th ><a href="https://bo.eznamka.sk/configuration/pos/detail/?id={{row.POS_ID}}" target="_blank"> <i style='color: forestgreen;'> {{ row.POS_NAME }}</th>
+          {% comment %} <th ><a href="https://bo.eznamka.sk/configuration/retailpartner/detail/?id={{row.RETAIL_PARTNER_ID}}" target="_blank"> <i style='color: forestgreen;'> BO {{ row.RETAIL_PARTNER_NAME }} </i></a></th>   {% endcomment %}
+          <th >{{ row.PRIORITY }}</th>
+          <th >{{ row.RETAIL_PARTNER_ID }}</th>
+          <th ><a href="https://bo.eznamka.sk/configuration/pos/detail/?id={{row.POS_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.RETAIL_PARTNER_NAME }}</th>
+          <th >{{ row.POS_TYPE_NAME }}</th>
+
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+
+    </div>
+    <button id="createXLSX">Export XLSX</button>
+    
+</div>
+
+{% if query != None %}
+
+
+
+<div id="table-wrapper" style="margin-bottom: 30px;">
+
+  <div id="table-scroll" >
+    <td colspan = "4"><b style="color: #337ab7; float: left;">History of the course of the selected job.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT
+              CAST(from_tz(CAST(action_datetime AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) AS action_datetime,
+              ji.scheduled_job_id,
+              job_name,
+              execution_state_name,
+              expected_number_of_items,
+              successfully_processed_items,
+              unsuccessfully_processed_items
+          FROM
+              edz_co.job_instance        ji
+              LEFT JOIN edz_co.execution_state_l   exs ON ji.execution_state_code = exs.execution_state_code
+              LEFT JOIN edz_co.scheduled_job       sj ON ji.scheduled_job_id = sj.scheduled_job_id
+          WHERE
+              exs.language_code = 'SK'
+              AND start_action_datetime >= trunc(SYSDATE - 7)
+              AND job_name LIKE '%RemoveTemporaryDocuments%'
+          ORDER BY
+              start_action_datetime DESC;
+                  </p>
+        </div>
+      </div>
+    </td>
+    <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+      <thead>
+            
+          <tr style="background-color: darkgrey;">
+            <th>POS_NUMBER</th>
+            <th>POS_NAME</th>
+            <th>RETAIL_PARTNER_NAME</th>
+            <th>DATE_OF_PAYMENT</th>
+            <th>PAYMENT_AMOUNT</th>
+            <th>PAYMENT_METHOD_NAME</th>
+            <th>VARIABLE_SYMBOL</th>
+            <th>PAYMENT_ID</th>
+
+          </tr>
+    </thead>
+      <tbody>
+        {% for row in query %}
+      <tr align="center">
+        <th>{{ row.POS_NUMBER }}</th>  
+        <th>{{ row.POS_NAME }}</th>  
+        <th>{{ row.RETAIL_PARTNER_NAME }}</th>  
+        <th>{{ row.DATE_OF_PAYMENT |date:"d-m-Y G:i:s" }}</th> 
+        <th>{{ row.PAYMENT_AMOUNT }} €</th>    
+        <th>{{ row.PAYMENT_METHOD_NAME }}</th>
+        <th>{{ row.VARIABLE_SYMBOL }}</th>
+        <th><a href="https://bo.eznamka.sk/payments/payment/detail/{{row.PAYMENT_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.PAYMENT_ID }}</th>   
+        
+
+        {% endfor %}
+
+      </tr>
+    </tbody> 
+
+    </table>
+
+    
+  </div>
+  <button id="createXLSX_2">Export XLSX</button>
+{% endif %}
+
+
+</div>
+
+<script>
+  
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+      
+    });
+  });
+  
+
+</script>
+<script>
+    // export excel 
+    var btn = document.getElementById("createXLSX");
+  var fileName = "export_error_jobs";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_jobs";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+  </script>
+
+  {% comment %} TIME FILTER {% endcomment %}
+  <script type="text/javascript">
+    $('#picker').datetimepicker({
+format: 'DD-MM-YYYY HH:mm:ss'
+   });
+   $('#picker2').datetimepicker({
+     format: 'DD-MM-YYYY HH:mm:ss'
+   });
+ </script>
+
+{% endblock %}

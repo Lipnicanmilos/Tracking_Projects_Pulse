@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    {% load static %}
+    {% block head %}
+    <meta charset="utf-8">
+
+    <title>TPP</title>
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+    <meta name="author" content="Milos User">
+    <meta name="keywords" content="SEM, Django, Python, WebApp">
+    <meta name="description" content="Creating a application using Python-Django">
+    <!-- <meta http-equiv="refresh" content="240"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- <script type="text/javascript" src="{% static 'weblog_app/livesearch.js' %}"></script> -->
+    <!-- <style type="text/css">
+                #livesearch
+                {
+                    margin: 0px;
+                    width: 194px;
+                    background-color: white;
+                    color: black;
+                    position: absolute;
+                    
+                }
+                #txt1
+                {
+                    margin: 0px;
+                    /* color: red; */
+                }
+               
+        </style> -->
+
+
+    {% endblock %}
+</head>
+<body>
+  <style>
+    :root {
+      --container-bg-color: #333;
+      --left-bg-color: rgb(42, 106, 170);
+      --left-button-hover-color: rgb(130, 183, 23);
+      --right-bg-color: rgb(22, 33, 108);
+      --right-button-hover-color: rgb(252, 183, 18);
+      --hover-width: 75%;
+      --other-width: 25%;
+      --speed: 1000ms;
+    }
+    
+    html, body {
+      padding:0;
+      margin:0;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+    }
+    
+    h1 {
+      font-size: 4rem;
+      color: #fff;
+      position: absolute;
+      left: 50%;
+      top: 20%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+    
+    .button {
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: 40%;
+      height: 4.5rem;
+      padding-top: 1.3rem;
+      width: 15rem;
+      text-align: center;
+      color: #fff;
+      border: #fff solid 0.2rem;
+      font-size: 1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-decoration: none;
+      transform: translateX(-50%);
+    }
+    
+    .split.left .button:hover {
+      background-color: var(--left-button-hover-color);
+      border-color: var(--left-button-hover-color);
+    }
+    
+    .split.right .button:hover {
+      background-color: var(--right-button-hover-color);
+      border-color: var(--right-button-hover-color);
+    }
+    
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: var(--container-bg-color);
+    }
+    
+    .split {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    .split.left {
+      left:0;
+      background: url('static/img/bgimage.jpg') center center no-repeat;
+      
+      background-size: cover;
+    }
+    
+    .split.left:before {
+      position:absolute;
+      content: "";
+      width: 100%;
+      height: 100%;
+      background: var(--left-bg-color);
+    }
+    
+    .split.right {
+      right:0;
+      background: url('static/img/slider-img-2.jpg') center center no-repeat;
+      background-size: cover;
+    }
+    
+    .split.right:before {
+      position:absolute;
+      content: "";
+      width: 100%;
+      height: 100%;
+      background: var(--right-bg-color);
+    }
+    
+    .split.left, .split.right, .split.right:before, .split.left:before {
+      transition: var(--speed) all ease-in-out;
+    }
+    
+    .hover-left .left {
+      width: var(--hover-width);
+    }
+    
+    .hover-left .right {
+      width: var(--other-width);
+    }
+    
+    .hover-left .right:before {
+      z-index: 2;
+    }
+    
+    
+    .hover-right .right {
+      width: var(--hover-width);
+    }
+    
+    .hover-right .left {
+      width: var(--other-width);
+    }
+    
+    .hover-right .left:before {
+      z-index: 2;
+    }
+    
+    @media(max-width: 800px) {
+      h1 {
+        font-size: 2rem;
+      }
+    
+      .button {
+        width: 12rem;
+      }
+    }
+    
+    @media(max-height: 700px) {
+      .button {
+        top: 70%;
+      }
+      .split.right{
+          background: url('static/img/slider-img-2.jpg') center center no-repeat;
+          background-size: cover;
+      }
+    }
+  </style>
+
+
+  <div class="container">
+      <div class="split left">
+        <h1>
+          <img src="{% static '/img/header-logo.png' %}" alt="ems_logo" style="width:120px; height:auto;">
+        </h1>
+        <a href="{% url 'work:home_ems' %}" class="button">EMS</a>
+      </div>
+      <div class="split right">
+        <h1>
+          <img src="{% static '/img/myto-full.png' %}" alt="sem_logo" style="width:250px; height:auto;">
+        </h1>
+        <a href="{% url 'work:home' %}"  class="button">SEM</a>
+      </div>
+  </div>
+      
+
+</body>
+
+  <script>
+
+    const left = document.querySelector(".left");
+    const right = document.querySelector(".right");
+    const container = document.querySelector(".container");
+
+    left.addEventListener("mouseenter", () => {
+      container.classList.add("hover-left");
+    });
+
+    left.addEventListener("mouseleave", () => {
+      container.classList.remove("hover-left");
+    });
+
+    right.addEventListener("mouseenter", () => {
+      container.classList.add("hover-right");
+    });
+
+    right.addEventListener("mouseleave", () => {
+      container.classList.remove("hover-right");
+    });
+
+  </script>
+
+</html>

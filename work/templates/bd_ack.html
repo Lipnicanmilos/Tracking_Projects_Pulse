@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+            <div class="input-group" style="display: flex;">
+              <div class="input-group date" id='picker' style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                <input type="text" name="x" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;" />
+                <span class="input-group-addon" >
+                  <span class="glyphicon glyphicon-calendar"></span>	                 
+                </span>
+              </div>
+                <b> <p style="margin-top: 7px;"><</p> </b>
+                
+                  <div class="input-group date" id='picker2'  style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                    <input type="text" name="y" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;"
+                    class="form-control form-control-lg" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>	                 
+                    </span>
+                  </div>
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+
+<style>
+#table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+
+}
+  #table-scroll {
+    max-height:283px;
+    min-height:50px;
+    overflow:scroll;  
+    margin-top:20px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+      
+  </style>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7;float: left;">All billing details that do not have an ACKnowledgment answer.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <!-- <br>
+    <div class="dropdown">
+      <button>Query</button>
+      <div class="dropdown-content"><p>
+        SELECT *
+                FROM
+                (SELECT bd.ede_log_id   AS bd_ede_log_id,
+                    bd.integration_log_id AS bd_integration_log_id,
+                    bd.ede_log_status_code
+                    ||'-'
+                    || bds.ede_log_status_name AS bd_ede_log_status,
+                    bd.eets_provider_id
+                    ||'-'
+                    || p.PROVIDER_NUMBER
+                    ||'-'
+                    || p.provider_abbreviation    AS EETS_PROVIDER,
+                    TO_CHAR( bd.apdu_identifier ) AS apdu_identifier,
+                    CAST(FROM_TZ(CAST(bd.created_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as bd_created_on,
+                    CAST(FROM_TZ(CAST(bd.exported_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as bd_exported_on,
+                    CAST(FROM_TZ(CAST(ack.created_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as ACK_CREATED_ON,
+                    24* (to_date( ack.created_on) - to_date(bd.exported_on )) diff_hours
+                FROM cis_ede.ede_log bd
+                JOIN cis_ede.ede_log_status_l bds
+                ON bd.ede_log_status_code = bds.ede_log_status_code
+                AND bds.language_code     = 'CS'
+                JOIN CIS_ECM.EETS_PROVIDER p
+                ON bd.eets_provider_id = p.EETS_PROVIDER_ID
+                LEFT JOIN cis_ede.ede_log ack
+                ON bd.ede_log_id               = ack.referred_ede_log_id
+                AND ack.ede_message_type_code  = 1
+                AND ack.ede_log_status_code    = 1
+                WHERE p.provider_abbreviation IN ( 'EW', 'ITIS' )
+                AND bd.ede_message_type_code   = 4
+                AND bd.created_on >= trunc(sysdate-90) 
+                )
+                WHERE ACK_CREATED_ON is NULL
+                ORDER BY bd_created_on desc;
+              </p>
+      </div>
+    </div> -->
+      <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>Nm.</th>
+          <th>BO_BillingDetail</th>
+          <th>BD_EDE_LOG_ID</th>
+          <th>BD_INTEGRATION_LOG_ID</th>
+          <th>BD_EDE_LOG_STATUS</th>
+          <th>EETS_PROVIDER</th> 
+          <th>APDU_IDENTIFIER</th>
+          <th>BD_CREATED_ON</th>
+          <th>BD_EXPORTED_ON</th>
+          <th>ACK_CREATED_ON</th>
+          <th>DIFF_HOURS</th>
+
+
+        </tr></thead>
+        <tbody >
+          {% for row in ack_None %}
+
+          <tr align="center">
+            <th>{{ forloop.counter }}</th>
+            <th ><a href="https://cis-host.internal.example.com/ecm/eetsexport/detail/?integrationLogId={{row.BD_INTEGRATION_LOG_ID}}" target="_blank"> <i style='color: forestgreen;'> BillingDetail {{row.BD_INTEGRATION_LOG_ID}} </i></a></th>    
+
+            <th style="color: red;">{{ row.BD_EDE_LOG_ID }}</th> 
+            <th style="color: red;">{{ row.BD_INTEGRATION_LOG_ID }}</th>    
+            <th style="color: red;">{{ row.BD_EDE_LOG_STATUS }}</th>    
+            <th style="color: red;">{{ row.EETS_PROVIDER }}</th> 
+            <th style="color: red;">{{ row.APDU_IDENTIFIER }}</th>    
+            <th style="color: red;">{{ row.BD_CREATED_ON |date:"d-m-Y G:i:s"}}</th>    
+            <th style="color: red;">{{ row.BD_EXPORTED_ON |date:"d-m-Y G:i:s"}}</th> 
+            <th style="color: red;">{{ row.ACK_CREATED_ON |date:"d-m-Y G:i:s"}}</th>    
+            <th style="color: red;">{{ row.DIFF_HOURS }}</th>
+
+
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+  </div>
+  <button id="createXLSX">Export XLSX</button>
+</div>
+  
+  <div id="table-wrapper">
+    <div id="table-scroll">
+      <td colspan = "4"><b style="color: #337ab7;float: left;">All billing data generated in the last three days or searched by date and time.</b></td>
+      <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+      <br>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT *
+                FROM
+                (SELECT bd.ede_log_id   AS bd_ede_log_id,
+                    bd.integration_log_id AS bd_integration_log_id,
+                    bd.ede_log_status_code
+                    ||'-'
+                    || bds.ede_log_status_name AS bd_ede_log_status,
+                    bd.eets_provider_id
+                    ||'-'
+                    || p.PROVIDER_NUMBER
+                    ||'-'
+                    || p.provider_abbreviation    AS EETS_PROVIDER,
+                    TO_CHAR( bd.apdu_identifier ) AS apdu_identifier,
+                    CAST(FROM_TZ(CAST(bd.created_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as bd_created_on,
+                    CAST(FROM_TZ(CAST(bd.exported_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as bd_exported_on,
+                    CAST(FROM_TZ(CAST(ack.created_on AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as ACK_CREATED_ON,
+                    ROUND(24* (to_date( ack.created_on) - to_date(bd.created_on)),3) diff_hours,
+                   ROUND((to_date(ack.created_on) - to_date(bd.created_on))*24*60,1) DIFF_MINUTES,
+                   ROUND((to_date(ack.created_on) - to_date(bd.created_on))*24*60*60,3) DIFF_SECONDS
+                FROM cis_ede.ede_log bd
+                JOIN cis_ede.ede_log_status_l bds
+                ON bd.ede_log_status_code = bds.ede_log_status_code
+                AND bds.language_code     = 'CS'
+                JOIN CIS_ECM.EETS_PROVIDER p
+                ON bd.eets_provider_id = p.EETS_PROVIDER_ID
+                LEFT JOIN cis_ede.ede_log ack
+                ON bd.ede_log_id               = ack.referred_ede_log_id
+                AND ack.ede_message_type_code  = 1
+                AND ack.ede_log_status_code    = 1
+                WHERE p.provider_abbreviation IN ( 'EW', 'ITIS' )
+                AND bd.ede_message_type_code   = 4
+                )
+                ORDER BY bd_created_on desc;
+                </p>
+        </div>
+      </div>
+        <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+          <thead>
+          <tr style="background-color: darkgrey; ">
+            <th>BO Link</th>
+            <th>BD_EDE_LOG_ID</th>
+            <th>BD_INTEGRATION_LOG_ID</th>
+            <th>BD_EDE_LOG_STATUS</th>
+            <th>EETS_PROVIDER</th> 
+            <th>APDU_IDENTIFIER</th>
+            <th>BD_CREATED_ON</th>
+            <th>BD_EXPORTED_ON</th>
+            <th>ACK_CREATED_ON</th>
+            <!-- <th>DIFF_SECONDS</th> -->
+            <th>DIFF_MINUTES</th>
+            <!-- <th>DIFF_HOURS</th> -->
+
+          </tr></thead>
+          <tbody>
+            {% for row in ack %}
+
+            {% if row.ACK_CREATED_ON == None %}
+            <tr align="center">
+              <th ><a href="https://cis-host.internal.example.com/ecm/eetsexport/detail/?integrationLogId={{row.BD_INTEGRATION_LOG_ID}}" target="_blank"> <i style='color: forestgreen;'> BillingDetail {{row.BD_INTEGRATION_LOG_ID}} </i></a></th>   
+              <th style="color: red;">{{ row.BD_EDE_LOG_ID }}</th> 
+              <th style="color: red;">{{ row.BD_INTEGRATION_LOG_ID }}</th>    
+              <th style="color: red;">{{ row.BD_EDE_LOG_STATUS }}</th>    
+              <th style="color: red;">{{ row.EETS_PROVIDER }}</th> 
+              <th style="color: red;">{{ row.APDU_IDENTIFIER }}</th>    
+              <th style="color: red;">{{ row.BD_CREATED_ON |date:"d-m-Y G:i:s"}}</th>    
+              <th style="color: red;">{{ row.BD_EXPORTED_ON |date:"d-m-Y G:i:s"}}</th> 
+              <th style="color: red;">{{ row.ACK_CREATED_ON |date:"d-m-Y G:i:s"}}</th>    
+              <th style="color: red;">{{ row.DIFF_MINUTES }}</th>
+
+ 
+  
+            {% else %}
+
+          <tr align="center">
+            <th ><a href="https://cis-host.internal.example.com/ecm/eetsexport/detail/?integrationLogId={{row.BD_INTEGRATION_LOG_ID}}" target="_blank"> <i style='color: forestgreen;'> BillingDetail {{row.BD_INTEGRATION_LOG_ID}} </i></a></th>   
+            <th>{{ row.BD_EDE_LOG_ID }}</th> 
+            <th>{{ row.BD_INTEGRATION_LOG_ID }}</th>    
+            <th>{{ row.BD_EDE_LOG_STATUS }}</th>    
+            <th>{{ row.EETS_PROVIDER }}</th> 
+            <th>{{ row.APDU_IDENTIFIER }}</th>    
+            <th>{{ row.BD_CREATED_ON |date:"d-m-Y G:i:s"}}</th>    
+            <th>{{ row.BD_EXPORTED_ON |date:"d-m-Y G:i:s"}}</th> 
+            <th>{{ row.ACK_CREATED_ON |date:"d-m-Y G:i:s"}}</th>    
+            <th>{{ row.DIFF_MINUTES }}</th>
+            
+
+            {% endif %}
+
+            {% endfor %}
+
+          </tr>
+        </tbody> 
+        </table>
+    </div>
+    <button id="createXLSX_2">Export XLSX</button>
+  </div>
+
+    <script type="text/javascript">
+       $('#picker').datetimepicker({
+  format: 'DD-MM-YYYY HH:mm:ss'
+      });
+      $('#picker2').datetimepicker({
+        format: 'DD-MM-YYYY HH:mm:ss'
+      });
+    </script>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+  // export excel 
+  var btn = document.getElementById("createXLSX");
+  var fileName = "export_bd_error";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_bd";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+  </script>
+
+
+{% endblock %}

@@ -1,0 +1,319 @@
+{% extends "eets/base.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px; margin-bottom: 6px;">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+              <div class="input-group" style="display: flex;">
+                <input type="text" name="a" placeholder="...BD_ID..."
+                class="form-control form-control-lg" />
+                <b> <p style="margin-top: 7px;">OR</p> </b>
+                <input type="text" name="b" placeholder="...RTE_ID..."
+                class="form-control form-control-lg" />
+                <b> <p style="margin-top: 7px;">OR</p> </b>
+                <input type="text" name="c" placeholder="...OBE..."
+                class="form-control form-control-lg" />
+                <b> <p style="margin-top: 7px;">OR</p> </b>
+                <input type="text" name="d" placeholder="...ECV..."
+                class="form-control form-control-lg" />
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<style>
+#table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+  #table-scroll {
+    height:283px;
+    overflow:scroll;  
+    margin-top:20px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+  </style>
+  
+  <div id="table-wrapper">
+    {% comment %} <td colspan = "4"><b style="color: #337ab7;">Jobs that are not successful or EXPECTED_NUMBER_OF_ITEMS!=SUCCESSFULLY_PROCESSED_ITEMS for the last three days.</b></td> {% endcomment %}
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          select
+            etd.*,
+            el.integration_log_id,
+            etd.vehicle_id,
+            el.exported_on,
+            v.REGISTRATION_NUMBER
+            from EETS_EDE.ede_log el
+            full join EETS_BE.eets_rte etd on etd.EETS_EXPORT_ILOG_ID = el.integration_log_id
+            full join EETS_BE.eets_rte_delayed etdd on etdd.EETS_EXPORT_ILOG_ID = el.integration_log_id
+            full join eets_ecm.vehicle v on v.vehicle_id = etd.vehicle_id 
+            where etd.EETS_RTE_ID IN ('21278')
+            --where etd.OBE_NUMBER IN ('D4829090')
+            --where v.REGISTRATION_NUMBER IN ('PK549FM')
+            --where el.INTEGRATION_LOG_ID IN ('41744') --BD_ID
+            order by etd.TOLL_SEGMENT_NAME_FULL asc
+                  </p>
+        </div>
+      </div>
+    </td>
+    <div id="table-scroll" style='min-height: 600px;'>
+        <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+
+      <!-- <h3 style="text-align: center;">Jobs</h3> -->
+
+      <!-- <table id="sortTable" class="table table-hover sortable" style="display: block; overflow-x: auto; white-space: nowrap; border: ridge;"> -->
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>Num.</th>
+          <th>EETS_RTE_ID</th>
+          <th>EETS_PROVIDER_ID</th>
+          <th>UNITS_USED</th>
+          <th>UNITS_USED_UNIT_CODE</th>
+          <th>UNIT_PRICE</th>
+          <th>METRIC_UNIT_CODE</th>
+          <th>BASIC_UNIT_PRICE</th>
+          <th>BASIC_UNIT_PRICE_UNIT_CODE</th>
+          <th>EETS_REGISTRATION_COUNTRY_CODE</th>
+          <th>NATIONAL_IDENTIFIER</th>
+          <th>OBE_MANUFACTURER_NUMBER</th>
+          <th>OBE_NUMBER</th>
+          <th>OBE_MANUFACTURER_ID</th>
+          <th>BILL_CYCLE_CODE</th>
+          <th>VEHICLE_ID</th>
+          <th>VEHICLE_CATEGORY_CODE</th>
+          <th>EMISSION_CLASS_CODE</th>
+          <th>NUMBER_OF_AXLES_CODE</th>
+          <th>EVENT_ID</th>
+          <th>PRICE_AMOUNT</th>
+          <th>PRICE_AMOUNT_VAT</th>
+          <th>DISCOUNT_RATE</th>
+          <th>BILLING_SERVICE_GROUP_ID</th>
+          <th>DISCOUNT_AMOUNT</th>
+          <th>BILLING_SERVICE_ID</th>
+          <th>IS_CANCELLABLE</th>
+          <th>IS_CANCELLED</th>
+          <th>BIBA_ID</th>
+          <th>EETS_EVENT_SOURCE_CODE</th>
+          <th>TOLL_EVENT_TYPE_CODE</th>
+          <th>BILL_ITEM_ID</th>
+          <th>OBU_NUMBER_OF_AXLES</th>
+          <th>OBU_TIMESTAMP</th>
+          <th>OBU_RECOGNITION_TYPE_CODE</th>
+          <th>OBU_SEGMENT_ID</th>
+          <th>TOLL_SEGMENT_ID</th>
+          <th>TOLL_DECLARATIONS</th>
+          <th>SENT_TO_BILLING_TIMESTAMP</th>
+          <th>AGGREGATION_TIMESTAMP</th>
+          <th>AGGREGATION_LOCAL_TIME</th>
+          <th>TAX_ID</th>
+          <th>ENQUEUE_TIMESTAMP</th>
+          <th>ORIGINAL_EETS_RTE_ID</th>
+          <th>DEQUEUE_TIMESTAMP</th>
+          <th>EETS_EXPORT_DATE_TIME</th>
+          <th>EETS_EXPORT_ILOG_ID</th>
+          <th>TOLL_SEGMENT_NAME_FULL</th>
+          <th>EETS_EXPORT_BILL_DETAILS_NUM</th>
+          <th>INTEGRATION_LOG_ID (BD_ID)</th>
+          <th>VEHICLE_ID_1</th>
+          <th>EXPORTED_ON</th>
+          <th>REGISTRATION_NUMBER</th>
+        </tr></thead>
+        <tbody>
+          {% for row in rte  %}
+        <tr align="center">
+          <th>{{ forloop.counter }}</th>
+          <th>{{ row.EETS_RTE_ID }}</th>
+          <th>{{ row.EETS_PROVIDER_ID }}</th>
+          <th>{{ row.UNITS_USED }}</th>
+          <th>{{ row.UNITS_USED_UNIT_CODE }}</th>
+          <th>{{ row.UNIT_PRICE }}</th>
+          <th>{{ row.METRIC_UNIT_CODE }}</th>
+          <th>{{ row.BASIC_UNIT_PRICE }}</th>
+          <th>{{ row.BASIC_UNIT_PRICE_UNIT_CODE }}</th>
+          <th>{{ row.EETS_REGISTRATION_COUNTRY_CODE }}</th>
+          <th>{{ row.NATIONAL_IDENTIFIER }}</th>
+          <th>{{ row.OBE_MANUFACTURER_NUMBER }}</th>
+          <th>{{ row.OBE_NUMBER }}</th>
+          <th>{{ row.OBE_MANUFACTURER_ID }}</th>
+          <th>{{ row.BILL_CYCLE_CODE }}</th>
+          <th>{{ row.VEHICLE_ID }}</th>
+          <th>{{ row.VEHICLE_CATEGORY_CODE }}</th>
+          <th>{{ row.EMISSION_CLASS_CODE }}</th>
+          <th>{{ row.NUMBER_OF_AXLES_CODE }}</th>
+          <th>{{ row.EVENT_ID }}</th>
+          <th>{{ row.PRICE_AMOUNT }}</th>
+          <th>{{ row.PRICE_AMOUNT_VAT }}</th>
+          <th>{{ row.DISCOUNT_RATE }}</th>
+          <th>{{ row.BILLING_SERVICE_GROUP_ID }}</th>
+          <th>{{ row.DISCOUNT_AMOUNT }}</th>
+          <th>{{ row.BILLING_SERVICE_ID }}</th>
+          <th>{{ row.IS_CANCELLABLE }}</th>
+          <th>{{ row.IS_CANCELLED }}</th>
+          <th>{{ row.BIBA_ID }}</th>
+          <th>{{ row.EETS_EVENT_SOURCE_CODE }}</th>
+          <th>{{ row.TOLL_EVENT_TYPE_CODE }}</th>
+          <th>{{ row.BILL_ITEM_ID }}</th>
+          <th>{{ row.OBU_NUMBER_OF_AXLES }}</th>
+          <th>{{ row.OBU_TIMESTAMP }}</th>
+          <th>{{ row.OBU_RECOGNITION_TYPE_CODE }}</th>
+          <th>{{ row.OBU_SEGMENT_ID }}</th>
+          <th>{{ row.TOLL_SEGMENT_ID }}</th>
+          <th>{{ row.TOLL_DECLARATIONS }}</th>
+          <th>{{ row.SENT_TO_BILLING_TIMESTAMP }}</th>
+          <th>{{ row.AGGREGATION_TIMESTAMP }}</th>
+          <th>{{ row.AGGREGATION_LOCAL_TIME }}</th>
+          <th>{{ row.TAX_ID }}</th>
+          <th>{{ row.ENQUEUE_TIMESTAMP }}</th>
+          <th>{{ row.ORIGINAL_EETS_RTE_ID }}</th>
+          <th>{{ row.DEQUEUE_TIMESTAMP }}</th>
+          <th>{{ row.EETS_EXPORT_DATE_TIME }}</th>
+          <th>{{ row.EETS_EXPORT_ILOG_ID }}</th>
+          <th>{{ row.TOLL_SEGMENT_NAME_FULL }}</th>
+          <th>{{ row.EETS_EXPORT_BILL_DETAILS_NUM }}</th>
+          <th>{{ row.INTEGRATION_LOG_ID }}</th>
+          <th>{{ row.VEHICLE_ID_1 }}</th>
+          <th>{{ row.EXPORTED_ON }}</th>
+          <th>{{ row.REGISTRATION_NUMBER }}</th>
+            {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+
+    </div>
+    <button id="createXLSX">Export XLSX</button>
+    
+</div>
+{% comment %} {% if users != '' %}
+<div id="table-wrapper" style="margin-bottom: 30px;">
+
+  <div id="table-scroll" >
+    <td colspan = "4"><b style="color: #337ab7; float: left;">History of the course of the selected job.</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT 
+                  </p>
+        </div>
+      </div>
+    </td>
+    <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+      <thead>
+            
+          <tr style="background-color: darkgrey;">
+            <th>POS_ID</th>
+            <th>USER_ID</th>
+            <th>USER_NAME</th>
+            <th>FIRST_NAME</th>
+            <th>LAST_NAME</th>
+            <th>USER_STATUS_CODE</th>
+            <th>USER_STATUS_NAME</th>
+            <th>EMAIL</th>    
+            <th>SELFCARE_USER_GROUP_ID</th>              
+            <th>CREATION_DATETIME</th>
+            <th>EXPIRATION_DATE</th>
+            <th>DELETED_ON</th>
+            <th>ROLE</th>
+
+
+          </tr>
+    </thead>
+      <tbody>
+        {% for row in users %}
+      <tr align="center">
+        {% comment %} <th>{{ row.USER_ID |date:"d-m-Y G:i:s" }}</th>  {% endcomment %}
+        {% comment %} <th>{{ row.POS_ID}}</th>
+        <th>{{ row.USER_ID }}</th> 
+        <th><a href="https://bo.eznamka.sk/security/user/detail/{{row.USER_ID}}" target="_blank"> <i style='color: forestgreen;'>{{ row.USER_NAME }}</th>
+          <th>{{ row.FIRST_NAME }}</th>
+          <th>{{ row.LAST_NAME }}</th>
+          <th>{{ row.USER_STATUS_CODE }}</th>
+          <th>{{ row.USER_STATUS_NAME }}</th> 
+          <th>{{ row.EMAIL }}</th>        
+          <th>{{ row.SELFCARE_USER_GROUP_ID }}</th> 
+          <th>{{ row.CREATION_DATETIME |date:"d-m-Y G:i:s" }}</th>
+          <th>{{ row.EXPIRATION_DATE |date:"d-m-Y G:i:s" }} </th>
+          <th>{{ row.DELETED_ON |date:"d-m-Y G:i:s" }}</th>   
+          <th>{{ row.ROLE }}</th>   {% endcomment %}
+        {% comment %} {% endfor %} {% endcomment %}
+
+      {% comment %} </tr>
+    </tbody> 
+    </table>
+  </div>
+  <button id="createXLSX_2">Export XLSX</button>
+{% endif %} {% endcomment %} 
+</div>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+    // export excel 
+    var btn = document.getElementById("createXLSX");
+  var fileName = "export_poses";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_users";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+  </script>
+
+{% endblock %}

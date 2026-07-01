@@ -1,0 +1,332 @@
+{% extends "eets/base.html" %}
+
+{% block body %}
+<style>
+    #table-wrapper {
+      position:relative;
+      padding-bottom: 20px
+    }
+    #table-scroll {
+      max-height:283px;
+      min-height:50px;
+      overflow:scroll;  
+      margin-top:20px;
+    }
+    #table-wrapper table {
+      width:100%;
+    
+    }
+    #table-wrapper table * {
+      /*background:yellow;*/
+      color:black;
+    }
+    #table-wrapper table thead th .text {
+      position:absolute;   
+      top:-20px;
+      z-index:2;
+      height:20px;
+      width:35%;
+      border:1px solid red;
+    }
+    td, th {
+        padding: 0px;
+        min-width: 0px; 
+        }
+    </style>
+
+<div class="content" style="padding-left: 15px; padding-right: 15px;">
+
+ <h3>EMS EETS LEGO REPORT</h3>
+ 
+ <form method="post" target="_blank">
+  {% csrf_token %}
+  <input type="text" name="MM" placeholder="Enter MM value" style="width: 40%;">
+  <button type="submit" name="generation_pdf">Generovanie PDF</button>
+</form>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7;float: left;">DWH: DB_USER view V_EETS_LEGO_REP_01</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <div class="dropdown">
+      <button>Query</button>
+      <div class="dropdown-content"><p>
+        select * from V_EETS_LEGO_REP_01 order by TRANSACTION_ARRIVAL_MONTH desc
+      </p>
+    </div>
+  </div>
+    <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+      <thead>
+      <tr style="background-color: darkgrey; ">
+      <th>TRANSACTION_ARRIVAL_MONTH</th>
+      <th>OWNER_NAME</th>
+      <th>ACCOUNTPRODUCTID</th>
+      <th>PASSAGEDATE_MONTHLY </th>
+      <th>SPOLU</th>
+
+
+    </tr></thead>
+    <tbody>
+      {% for row in dwh_lego_view %}
+    
+    <tr align="center">
+      <th>{{ row.TRANSACTION_ARRIVAL_MONTH}}</th>    
+      <th>{{ row.OWNER_NAME}}</th>
+      <th>{{ row.ACCOUNTPRODUCTID}}</th>
+      <th>{{ row.PASSAGEDATE_MONTHLY}}</th>
+      <th>{{ row.SPOLU}}</th>
+      {% endfor %}
+    </tr>
+  
+  </tbody> 
+  </table>
+  </div>
+  <button id="createXLSX">Export XLSX</button>
+  </div>
+
+  <hr>
+  <h3>Naplnenie dat do schemy DB_USER za dany mesiac</h3>
+  <div class="dropdown">
+    <button>Query</button>
+    <div class="dropdown-content"><p><pre>
+            DEFINE MM = 07 /* mesiac generovania dat */
+            DEFINE mydate =TO_DATE('31-07-2025','dd-mm-yyyy') /* horne ohranicenie */
+            declare
+              o_result_code NUMBER;
+              o_error_message VARCHAR2(4000);
+            begin
+              kdx_pkg_eets_lego_ppp_2025_3COMP.lego_prepare_kpbpm_agg (
+                o_result_code => o_result_code,
+                o_error_message => o_error_message,
+                i_date_from_01_mm_yyyy => to_date('01-' || &MM || '-2025', 'DD-MM-YYYY'),
+            i_date_from_0203_mm_yyyy => to_date('03-' || &MM || '-2025', 'DD-MM-YYYY'),
+            i_parallel_degree => 6,
+                i_discount_calculated_on_from => to_date('01-' || &MM || '-2025', 'DD-MM-YYYY'),
+            i_discount_calculated_on_to => &mydate
+            );
+            END;
+            /
+            declare
+              o_result_code NUMBER;
+              o_error_message VARCHAR2(4000);
+            begin
+              kdx_pkg_eets_lego_ppp_2025_3COMP.lego_insert_kpbpm (
+                o_result_code => o_result_code,
+                o_error_message => o_error_message,
+                i_date_from_01_mm_yyyy => to_date('01-' || &MM || '-2025', 'DD-MM-YYYY')
+            );
+            END;
+            /
+            declare
+              o_result_code NUMBER;
+              o_error_message VARCHAR2(4000);
+            begin
+              -- Call the procedure
+              kdx_pkg_eets_lego_ppp_2025_3COMP.lego_prepare_kspoi_agg (
+                o_result_code => o_result_code,
+                o_error_message => o_error_message,
+                i_date_from_01_mm_yyyy => to_date('01-' || &MM || '-2025', 'DD-MM-YYYY'),
+                i_date_from_0203_mm_yyyy =>  to_date('03-' || &MM || '-2025', 'DD-MM-YYYY'),
+                i_discount_calculated_on_from => to_date('01-' || &MM || '-2025','dd-mm-yyyy'),  
+                i_discount_calculated_on_to => &mydate,
+                i_include_invoices_in_progress => 0);
+            END;
+            /
+    </pre>
+    </p>
+  </div>
+</div>
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" name="MM" placeholder="Enter MM value" style="width: 40%;">
+    <input type="text" name="mydate" placeholder="Enter mydate value (DD-MM-YYYY)" style="width: 40%;">
+    <button type="submit" name="run_procedure">Spustit proceduru</button>
+  </form>
+
+  
+
+  <hr>
+  <h3>Vymazanie dat za zvoleny mesiac</h3>
+  <div class="dropdown">
+    <button>Query</button>
+    <div class="dropdown-content"><p><pre>
+          DEFINE MM = 07;
+            -- vymazanie tabuliek k reportu
+            BEGIN
+              DECLARE
+                o_result_code NUMBER;
+                o_error_message VARCHAR2(4000);
+              BEGIN
+                kdx_pkg_eets_lego_ppp_2025_3COMP.lego_drop_temporary_agg_tables(
+                  o_result_code => o_result_code,
+                  o_error_message => o_error_message,
+                  i_date_from_01_mm_yyyy => TO_DATE('01-' || &MM || '-2025', 'DD-MM-YYYY')
+                );
+              END;
+              DECLARE
+                o_result_code NUMBER;
+                o_error_message VARCHAR2(4000);
+              BEGIN
+                kdx_pkg_eets_lego_ppp_2025_3COMP.lego_del_kpbpm_by_trans_ar_mon(
+                  o_result_code => o_result_code,
+                  o_error_message => o_error_message,
+                  i_date => TO_DATE('01-' || &MM || '-2025', 'DD-MM-YYYY')
+                );
+              END;
+              DECLARE
+                o_result_code NUMBER;
+                o_error_message VARCHAR2(4000);
+              BEGIN
+                kdx_pkg_eets_lego_ppp_2025_3COMP.lego_del_kspoi_by_trans_ar_mon(
+                  o_result_code => o_result_code,
+                  o_error_message => o_error_message,
+                  i_date => TO_DATE('01-' || &MM || '-2025', 'DD-MM-YYYY')
+                );
+              END;
+            END;
+            /
+    </pre></p>
+  </div>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="MM" placeholder="Enter MM value" style="width: 40%;">
+  <input type="text" name="YYYY" placeholder="Enter YYYY value" style="width: 40%;">
+  <button type="submit" name="delete_procedure">Delete data</button>
+</form>
+
+<br><hr><hr><br>
+<h3>Prehľad vyňatych Bill ID</h3>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7;float: left;">DWH: DB_USER table KDX_REMOVED_BILL_IDS</b></td>
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <div class="dropdown">
+      <button>Query</button>
+      <div class="dropdown-content"><p>
+        select * from KDX_REMOVED_BILL_IDS
+      </p>
+    </div>
+  </div>
+    <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+      <thead>
+      <tr style="background-color: darkgrey; ">
+      <th>TRANSACTION_ARRIVAL_MONTH</th>
+      <th>REMOVED_BILL_ID</th>
+    </tr></thead>
+    <tbody>
+      {% for row in dwh_lego_removed_bill %}
+    
+    <tr align="center">
+      <th>{{ row.TRANSACTION_ARRIVAL_MONTH}}</th>    
+      <th>{{ row.REMOVED_BILL_ID}}</th>
+
+      {% endfor %}
+    </tr>
+  
+  </tbody> 
+  </table>
+  </div>
+  <button id="createXLSX">Export XLSX</button>
+  </div>
+
+  <div id="table-wrapper" style="margin-bottom: 100px;">
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" name="delete_REMOVED_BILL_ID">Delete data (TRUNCATE TABLE KDX_REMOVED_BILL_IDS)</button>   
+  </form>
+
+  <form method="post">
+    {% csrf_token %}
+      
+    <br>
+    <div class="dropdown" >
+      <button>Query</button>
+      <div class="dropdown-content"><p>
+        INSERT INTO kdx_removed_bill_ids (transaction_arrival_month, removed_bill_id)
+                        SELECT to_date(TO_CHAR(ADD_MONTHS(TRUNC(Passage_month, 'MM'), -1), 'dd.mm.yyyy'), 'dd.mm.yyyy'), 
+                            bill_id
+                        FROM (
+                        SELECT distinct
+                            /*+ FULL(rte) PARALLEL(6) */
+                            TRUNC(rte.OBU_TIMESTAMP, 'MM') AS Passage_month,
+                            b.bill_id
+                        FROM eets_maa.EETS_RTE_ALL rte
+                            inner join eets_maa.BILL_ITEM bi on bi.bill_item_id = rte.bill_item_id
+                            inner join eets_maa.BILL b on b.bill_id = bi.bill_id
+                        where (b.ISSUE_DATE_TIME >= TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM') 
+                            AND b.ISSUE_DATE_TIME < TRUNC(ADD_MONTHS(SYSDATE, 1), 'MM') 
+                            AND b.BILL_SESSION_ID IS NOT NULL AND b.BILL_ISSUER_CODE=20)   
+                            and rte.obu_timestamp >= TRUNC(SYSDATE, 'MM')
+                        )
+      </p>
+    </div>
+  </div>
+    <button type="submit" name="insert_REMOVED_BILL_ID">INSERT</button> 
+  </form >
+</div>
+
+<script type="text/javascript">
+  $('#picker').datetimepicker({
+format: 'DD-MM-YYYY HH:mm:ss'
+ });
+ $('#picker2').datetimepicker({
+   format: 'DD-MM-YYYY HH:mm:ss'
+ });
+</script>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_3").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab3 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+// export excel 
+var btn = document.getElementById("createXLSX");
+var fileName = "export_detail";
+var fileType = "xlsx";
+btn.addEventListener("click", function() {
+var table = document.getElementById("tab1");
+var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+});
+
+var btn = document.getElementById("createXLSX_2");
+var fileName1 = "export_error";
+var fileType = "xlsx";
+btn.addEventListener("click", function() {
+var table = document.getElementById("tab2");
+var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+});
+
+var btn = document.getElementById("createXLSX_3");
+var fileName1 = "export_tables";
+var fileType = "xlsx";
+btn.addEventListener("click", function() {
+var table = document.getElementById("tab3");
+var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+});
+</script>
+{% endblock %}

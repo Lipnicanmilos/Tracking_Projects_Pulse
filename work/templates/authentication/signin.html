@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    {% load static %}
+    {% block head %}
+    <meta charset="utf-8">
+
+    <title>TPP</title>
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+    <meta name="author" content="Milos User">
+    <meta name="keywords" content="SEM, Django, Python, WebApp">
+    <meta name="description" content="Creating a application using Python-Django">
+    <!-- <meta http-equiv="refresh" content="240"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- <script type="text/javascript" src="{% static 'weblog_app/livesearch.js' %}"></script> -->
+    <!-- <style type="text/css">
+                #livesearch
+                {
+                    margin: 0px;
+                    width: 194px;
+                    background-color: white;
+                    color: black;
+                    position: absolute;
+                    
+                }
+                #txt1
+                {
+                    margin: 0px;
+                    /* color: red; */
+                }
+               
+        </style> -->
+
+
+    {% endblock %}
+</head>
+
+<body>
+
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <!-- Login Form -->
+
+        <!-- <form method="post">
+            {% csrf_token %}
+            <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
+            <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
+            <input type="submit" class="fadeIn fourth" value="Log In">
+        </form> -->
+
+        <!-- <form method="POST">
+            {% csrf_token %}
+  
+            <br>
+            <button class="btn btn-primary" type="submit">Login</button>
+        </form> -->
+
+        {% for message in messages %}
+        <div class="alert alert-danger" role="alert">
+            {{message}}
+        </div>
+        {% endfor %}
+
+
+        <form action="/signin" method="post" class="form-horizontal">
+            
+            {% csrf_token %}
+
+            <div class="col-xs-8 " style="display: contents;">
+                <h2 style="text-align:center; color:#286090;">LOGIN</h2>
+            </div>
+            
+            <div class="form-group">
+                <label for="">Username</label>
+                <input style="
+                background-color: #f6f6f6;
+                border: none;
+                color: #0d0d0d;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 5px;
+                width: 85%;
+                border: 2px solid #f6f6f6;
+                -webkit-transition: all 0.5s ease-in-out;
+                -moz-transition: all 0.5s ease-in-out;
+                -ms-transition: all 0.5s ease-in-out;
+                -o-transition: all 0.5s ease-in-out;
+                transition: all 0.5s ease-in-out;
+                -webkit-border-radius: 5px 5px 5px 5px;
+                border-radius: 5px 5px 5px 5px;
+                "  type="text" class="form-control" name="username" id="username" placeholder="Name.Surname">
+            </div>
+            <div class="form-group">
+                <label for="">Password</label>
+                <input style="
+                background-color: #f6f6f6;
+                border: none;
+                color: #0d0d0d;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 5px;
+                width: 85%;
+                border: 2px solid #f6f6f6;
+                -webkit-transition: all 0.5s ease-in-out;
+                -moz-transition: all 0.5s ease-in-out;
+                -ms-transition: all 0.5s ease-in-out;
+                -o-transition: all 0.5s ease-in-out;
+                transition: all 0.5s ease-in-out;
+                -webkit-border-radius: 5px 5px 5px 5px;
+                border-radius: 5px 5px 5px 5px;
+                " 
+                type="password" class="form-control" name="pass1" id="pass1" placeholder="Password">
+            </div>
+            <button style="margin-bottom: 15px;" type="submit" class="btn btn-primary">LogIn</button>
+            <br />
+            <!-- <div class="form-group">
+
+            </div> -->
+        </form>
+        <div>
+            <button class="btn btn-success">
+                <a href="{% url 'work:signup' %}" style="color: white; text-decoration: none;">Create</a>
+            </button>
+         </div>  
+
+        <!-- Remind Passowrd -->
+        <!-- <div id="formFooter">
+            <a class="underlineHover" href="#">Forgot Password?</a>
+        </div> -->
+
+    </div>
+</div>
+
+<script>
+    console.log("author: user@example.com");
+</script>
+
+
+
+
+</body>

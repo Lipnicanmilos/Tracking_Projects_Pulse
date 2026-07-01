@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Invoice</title>
+
+    <style>
+
+        /* Add your CSS styles here */
+
+    </style>
+
+</head>
+
+<body>
+
+    <table border="1" width="100%">
+
+        <thead>
+
+            <tr>
+
+                <th></th>
+
+                {% for month in "2023/11 2023/12 2024/01" %}
+
+                    <th>{{ month }}</th>
+
+                {% endfor %}
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for item in data %}
+
+                <tr>
+
+                    <td>{{ item.ACCOUNTPRODUCTID }}</td>
+
+                    <td>{{ item.SPOLU }}</td>
+
+                    <td>{{ item.SPOLU }}</td>
+
+                    <td>{{ item.SPOLU }}</td>
+
+                </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+        <tfoot>
+
+            {% for row in data|groupby:"OWNER_NAME" %}
+
+                <tr>
+
+                    <td>Spolu</td>
+
+                    {% for item in row.1 %}
+
+                        <td>{{ item.SPOLU }}</td>
+
+                    {% endfor %}
+
+                </tr>
+
+            {% endfor %}
+
+        </tfoot>
+
+    </table>
+
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+{% extends "edz/home_edz.html" %}
+
+
+
+{% comment %} {% load bootstrap_pagination %} {% endcomment %}
+{% comment %} {% load humanize %} {% endcomment %}
+{% load crispy_forms_tags %}
+
+
+{% block body %}
+
+<style>
+{% comment %} h6{
+	display:flex;
+} {% endcomment %}
+#right{
+	float:right;
+}
+</style>
+<hr>
+<b><h4 style='text-align:center'>Automaticke reporty: 
+		{% comment %} <a href="{% url 'admin/django_apscheduler/' %}"> {% endcomment %}
+		<a href="http://127.0.0.1:8000/admin/django_apscheduler/">
+			<button type="button" class="btn btn-info" style="margin-left: 15px"> 
+				Admin jobs
+			</button>
+		</a>
+	</h4></b>
+
+
+<div class="alert alert-success" role="alert">
+	
+	<h4> EDZ časové rozlíšenie výnosov
+
+		<div id='right'>
+			<a href="{% url 'edz:sql_crv_edz' %}">
+				<button type="button" class="btn btn-info" style="margin-left: 15px"> 
+					SQL
+				</button>
+			</a>
+			<a href="{% url 'edz:report_edz_crv_view' %}" style="text-decoration:none">
+				<button type="button" class="btn btn-primary" style="">
+					Edit: emails and run
+				</button>
+			</a>
+		</div>
+	</h6>
+	
+	<hr>
+
+	<h4> EDZ Report podania C120465  
+		<a href="https://example.sharepoint.com/teams/example-team/Zkazncke%20podania/Forms/AllItems.aspx?id=%2Fteams%2Fcoo%2Dbdpcp%2FZkazncke%20podania%2FREPORT%20%2D%20po%C4%8Det%20podan%C3%AD%20EDZ%20na%20KM&p=true&ct=1724406406643&or=OWA%2DNT%2DMail&cid=ee882d67%2D13f3%2D9ddc%2Df1c8%2De5447728226e&ga=1" target="_blank">Sharepoint</a> 
+
+		
+		<div id='right'>
+			<a href="{% url 'edz:sql_podania_edz' %}">
+				<button type="button" class="btn btn-info" style="margin-left: 15px"> 
+					SQL
+				</button>
+			</a>
+			<a href="{% url 'edz:report_edz_podania_html' %}" style="text-decoration:none">
+				<button type="button" class="btn btn-primary" style="">
+					Edit: emails and run
+				</button>
+			</a>
+		</div>
+	</h4>
+
+</div>
+
+{% endblock %}

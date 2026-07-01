@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+
+
+<!-- <div class="jumbotron border shadow">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+              <div class="input-group" style="display: flex;">
+                  <input type="text" name="q" placeholder="Jobs"
+                  class="form-control form-control-lg" />
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div> -->
+<style>
+  #table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+</style>
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+    <div class="row" style="margin-right: 0px; margin-left: 0px;">
+        <div class="col-md-12 offset-2" >
+            <form action="">
+                <div class="input-group" style="display: flex;">
+                    <input type="text" name="q" placeholder="TRANSACTION_DATA_ID"
+                    class="form-control form-control-lg" />
+                    <input type="text" name="q2" placeholder="for example"
+                    class="form-control form-control-lg" />
+                    <input type="text" name="q3" placeholder="64675259"
+                    class="form-control form-control-lg" />
+                    <div class="input-group-append">
+                        <button class="btn-lg">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+
+  <div id="table-wrapper">
+    <div id="table-scroll">
+
+  <td colspan = "5"> <b style="color: #337ab7;">Display of rejected transactions. Example: IM394524 or IM407204. </b></td>
+  <br>
+  <br>
+  <td>
+    <div class="dropdown">
+      <button>Query</button>
+      <div class="dropdown-content"><p>
+        Select * from CIS_FA.REJECTED_TRANSACTION where DELETED_ON is NULL;
+                </p>
+      </div>
+    </div>
+  </td>
+  <table id="sortTable" class="table table-hover sortable" style="/*display: block; */ overflow-x: auto; white-space: nowrap; border: ridge;">
+    <thead>
+    <tr style="background-color: darkgrey;">
+      <th>TRANSACTION_DATA_ID</th>
+      <th>TRANSACTION_DOCUMENT</th>
+      <th>ACCOUNTING_DATETIME</th>
+      <th>TRANSACTION_AMOUNT</th>
+      <th>Url + id</th>
+
+  
+    </tr></thead>
+    <tbody>
+      {% for row in REJECTED_TRAN %}
+    <tr align="center">
+      <th>{{ row.TRANSACTION_DATA_ID }}</th> 
+      <th>{{ row.TRANSACTION_DOCUMENT }}</th>    
+      <th>{{ row.ACCOUNTING_DATETIME |date:"Y-m-d G:i:s" }}</th>    
+      <th>{{ row.TRANSACTION_AMOUNT }}</th>
+      <th ><a href="https://cis-host.internal.example.com/financial-accounting/rejectedtransaction/detail/?id={{ row.TRANSACTION_DATA_ID }}" target="_blank"> <i style='color: forestgreen;'> https://cis-host.internal.example.com/financial-accounting/rejectedtransaction/detail/?id={{ row.TRANSACTION_DATA_ID }} </i></a></th>    
+
+
+  
+  
+      {% endfor %}
+  
+    </tr>
+  </tbody> 
+  </table>
+
+
+<div class="content" style="padding-left: 15px; padding-right: 15px;">
+
+  {% if request.GET %}
+<div style="text-align: center;">
+    <a href="{% url 'work:download_DBMS'  %}"><button>Download dbms_output txt</button></a>
+</div>
+
+<hr style="border-top: 1px solid;">
+
+    {{file_content|linebreaks}}
+{% endif%}
+
+
+
+</div>
+</div>
+
+
+
+{% endblock %}

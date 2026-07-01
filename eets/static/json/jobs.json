@@ -1,0 +1,42 @@
+[
+    {
+        "model": "EETS_OBE",
+        "fields": {
+            "emails": [
+                "user@example.com"
+            ],
+            "run": "{\"minute\": \"15\", \"hour\": \"4,12,20\", \"day\": \"*\", \"month\": \"11\"}",
+            "head": "EMS EETS PX OBE",
+            "body": "Dobry den \\n\\nObsahom tohto emailu je automaticky vygenerovany report v pr\u00edlohe. \\n\\nS pozdravom  \\nPrevadzka App "
+        }
+    },
+    {
+        "model": "EETS_RATING",
+        "fields": {
+            "emails": [
+                "user@example.com"
+            ],
+            "run": "{\"minute\": \"45\", \"hour\": \"0,4,8,12,16,20\", \"day\": \"*\", \"month\": \"11\"}",
+            "head": "EMS EETS RATING",
+            "body": "<b>Kontrola ocenovanie MT vsetkych TSP za posledne 4h a ITIS 12h</b><br> '<br><b>'{{result_list}} + </b><br><br> + 'Skontrolovane v case: ' + now + <br><br>Prosim o kontrolu v BO: <br><a href='https://bo.internal.example.com/rating/rerate/events/'> Ocenen\u0102\u00a9 m\u0102\u02ddtne udalosti</a><br><a href='https://bo.internal.example.com/rating/rerate/tolldatarecordeets/'> M\u0102\u02ddtne udalosti EETS \u00c4\u0164akaj\u0102\u015fce na ocenenie</a><br><a href='https://bo.internal.example.com/ecm/eetsimport/?whitelist=True'> WhiteList</a>- bez WL od TSP sa nebudu ocenovat <br><br>V minulosti riesene v:<br> <a href='https://example.atlassian.net/browse/EMSW-443'>EMSW-443</a> <br><a href='https://example.atlassian.net/browse/EMSW-451'>EMSW-451</a> <br>Zabbix priprava: <a href='https://example.atlassian.net/browse/EMSC-464'>EMSC-464</a><br><br>EMS-EETS TC DB script: <br><br> +sql_ack_None + <br><br>S pozdravom <br>App User"
+        }
+    },
+    {
+        "model": "EETS_Lego",
+        "fields": {
+            "emails": [
+                "user@example.com",
+                "     igor.bokor@example.com",
+                "     jakub.ress@example.com",
+                "    veronika.miklosova@example.com",
+                "    jan.mraz@example.com",
+                "  branislav.oriesek@example.com",
+                "  peter.grainda@example.com",
+                " peter.komlossy@example.com"
+            ],
+            "run": "{\"hour\": \"08\", \"minute\": \"30\", \"day\": \"3\", \"month\": \"01\"}",
+            "head": "EMS EETS LEGO",
+            "body": "Dobry den \\n\\nObsahom tohto emailu je automaticky vygenerovany report v pr\u00edlohe. \\n\\nS pozdravom \\nPrevadzka App"
+        }
+    }
+]

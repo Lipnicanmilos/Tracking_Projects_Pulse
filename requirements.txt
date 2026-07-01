@@ -1,0 +1,14 @@
+Django==4.1.7
+python-dotenv
+pytz
+django-crispy-forms
+django-jazzmin
+django-encrypted-model-fields
+APScheduler
+django-apscheduler
+openpyxl
+requests
+jira
+Office365-REST-Python-Client
+# cx_Oracle je potrebný len pri pripojení na Oracle (vyžaduje Oracle client)
+cx_Oracle

@@ -1,0 +1,122 @@
+{% extends "eets/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+<style>
+    .report-section {
+        margin-bottom: 3rem;
+        padding: 0 15%;
+    }
+    .section-title {
+        text-align: center;
+        margin: 2rem 0;
+        color: white;
+        font-weight: 600;
+        padding: 1rem;
+        background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .report-card {
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+    }
+    .report-item {
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background-color 0.2s;
+    }
+    .report-item:hover {
+        background-color: rgba(0,0,0,0.03);
+    }
+    .report-item:not(:last-child) {
+        border-bottom: 1px solid #e9ecef;
+    }
+    .report-name {
+        font-weight: 500;
+        color: #495057;
+        font-size: 1.2rem;
+        word-break: break-word;
+    }
+    .report-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    .btn-action {
+        min-width: 100px;
+        height: 40px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .btn-run {
+        background-color: #28a745;
+        color: white;
+    }
+    .btn-edit {
+        background-color: #007bff;
+        color: white;
+    }
+    .btn-admin {
+        background-color: #6c757d;
+        color: white;
+    }
+</style>
+
+<!-- Section Header -->
+<div class="report-section">
+    <h3 class="section-title">
+        Automatické reporty
+
+    </h3>
+
+    <div class="card report-card">
+
+        <div class="report-item">
+            <span class="report-name">EMS EETS LEGO REPORT</span>
+            <div class="report-actions">
+                <a href="{% url 'eets:DB_USER' %}" class="no-underline">
+                    <button type="button" class="btn-action btn-run">Manual start</button>
+                </a>
+                <a href="{% url 'eets:eets_lego' %}" class="no-underline">
+                    <button type="button" class="btn-action btn-edit">Edit auto start</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="report-item">
+            <span class="report-name">EMS EETS CONTROL RATING</span>
+            <div class="report-actions">
+                <a href="{% url 'eets:rating_view' %}" class="no-underline">
+                    <button type="button" class="btn-action btn-edit">Edit auto start</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="report-item">
+            <span class="report-name">EMS EETS PX JOB, CONTROL IMPORTS OBE POSITIONS</span>
+            <div class="report-actions">
+                <a href="{% url 'eets:obe_positions' %}" class="no-underline">
+                    <button type="button" class="btn-action btn-edit">Edit auto start</button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

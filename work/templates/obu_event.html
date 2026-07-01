@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="jumbotron border shadow" style="background-color: #337ab7; padding: 20px;">
+  <div class="row" style="margin-right: 0px; margin-left: 0px;">
+      <div class="col-md-12 offset-2" >
+          <form action="">
+            <div class="input-group" style="display: flex;">
+              <div class="input-group date" id='picker' style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                <input type="text" name="x" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;" />
+                <span class="input-group-addon" >
+                  <span class="glyphicon glyphicon-calendar"></span>	                 
+                </span>
+              </div>
+                <b> <p style="margin-top: 7px;"><</p> </b>
+                
+                  <div class="input-group date" id='picker2'  style="height: fit-content; padding: 0px 5px 0px 5px; width: 750px;">
+                    <input type="text" name="y" placeholder="datetime" class="form-control form-control-lg" style="margin: 0px;"
+                    class="form-control form-control-lg" />
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>	                 
+                    </span>
+                  </div>
+                  <div class="input-group-append">
+                      <button class="btn-lg">Search</button>
+                  </div>
+              
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+
+<style>
+#table-wrapper {
+  position:relative;
+  padding-bottom: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+
+}
+  #table-scroll {
+    max-height:283px;
+    min-height:50px;
+    overflow:scroll;  
+    margin-top:20px;
+    padding-top: 2px;
+  }
+  #table-wrapper table {
+    width:100%;
+  
+  }
+  #table-wrapper table * {
+    /*background:yellow;*/
+    color:black;
+  }
+  #table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
+  td, th {
+      padding: 0px;
+      min-width: 0px; 
+      }
+  </style>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7; float: left;">Overview of OBU actions 'Neúspěšný výdej zákazníkovi' for the last day. 
+     </b></td>  
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_1" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+      <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          SELECT OBU_EH_ID, OBU_STOCK_ITEM_ID, OBU_SN, ACCOUNT_ID, ACCOUNT_NUMBER, ACCOUNT_TYPE_CODE,
+          ACCOUNT_TYPE_NAME, POSTPAID_ACCOUNT_TYPE_CODE, POSTPAID_ACCOUNT_TYPE_NAME,
+          CAST(FROM_TZ(CAST(CREATED_ON AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) AS CREATED_ON,
+          EXECUTED_BY APPLICATION_CODE, POS_ID, RETAIL_PARTNER_ABBR, POS_NUMBER, POS_TYPE_CODE, LOCATION_TYPE_NAME,
+          OPERATION_CODE, OPERATION_NAME, OBU_ID, STOCK_ID, OBU_OL_STATUS_CODE, OBU_OL_STATUS_NAME,
+          OPERATIONAL_STATUS, OBU_OP_STATUS_NAME, ORDER_DATA_ID
+        FROM xosa.CIS_OL_OBU_EVENT
+        WHERE CREATED_ON  > TRUNC(sysdate-1,'DD')
+        AND OPERATION_NAME='Neúspěšný výdej zákazníkovi'
+        ORDER BY CREATED_ON DESC;
+                        </p>
+        </div>
+      </div>
+    </td>
+
+      <table id="tab1" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>Link OBU</th>
+          <th>OBU_EH_ID</th>
+          <th>OBU_STOCK_ITEM_ID</th>
+          <th>CREATED_ON</th>
+          <th>OBU_SN</th>
+          <th>OPERATION_NAME</th>
+          <th>ACCOUNT_ID</th>
+          <th>ACCOUNT_NUMBER</th>
+          <th>ACCOUNT_TYPE_CODE</th>
+          <th>ACCOUNT_TYPE_NAME</th>
+          <th>POSTPAID_ACCOUNT_TYPE_CODE</th>
+          <th>POSTPAID_ACCOUNT_TYPE_NAME</th>
+          <th>EXECUTED_BY</th>
+          <th>APPLICATION_CODE</th>
+          <th>POS_ID</th>
+          <th>RETAIL_PARTNER_ABBR</th>
+          <th>POS_NUMBER</th>
+          <th>POS_TYPE_CODE</th>
+          <th>LOCATION_TYPE_NAME</th>
+          <th>OPERATION_CODE</th>
+          <th>OBU_ID</th>
+          <th>STOCK_ID</th>
+          <th>OBU_OL_STATUS_CODE</th>
+          <th>OBU_OL_STATUS_NAME</th>
+          <th>OPERATIONAL_STATUS</th>
+          <th>OBU_OP_STATUS_NAME</th>
+          <th>ORDER_DATA_ID</th>
+
+        </tr></thead>
+        <tbody >
+          {% for row in event_error %}
+
+          <tr align="center">
+            <th ><a href="https://cis-host.internal.example.com/obu-logistic/obu/detail/?id={{row.OBU_STOCK_ITEM_ID}}" target="_blank"> <i style='color: forestgreen;'>OBU Detail {{row.OBU_STOCK_ITEM_ID}} </i></a></th>   
+            <th>{{ row.OBU_EH_ID }}</th>
+            <th>{{ row.OBU_STOCK_ITEM_ID }}</th>
+            <th style="color: #337ab7">{{ row.CREATED_ON|date:"d-m-Y G:i:s" }}</th>
+            <th>{{ row.OBU_SN }}</th>
+            <th>{{ row.OPERATION_NAME }}</th>
+            <th>{{ row.ACCOUNT_ID }}</th>
+            <th>{{ row.ACCOUNT_NUMBER }}</th>
+            <th>{{ row.ACCOUNT_TYPE_CODE }}</th>
+            <th>{{ row.ACCOUNT_TYPE_NAME }}</th>
+            <th>{{ row.POSTPAID_ACCOUNT_TYPE_CODE }}</th>
+            <th>{{ row.POSTPAID_ACCOUNT_TYPE_NAME }}</th>
+            <th>{{ row.EXECUTED_BY }}</th>
+            <th>{{ row.APPLICATION_CODE }}</th>
+            <th>{{ row.POS_ID }}</th>
+            <th>{{ row.RETAIL_PARTNER_ABBR }}</th>
+            <th>{{ row.POS_NUMBER }}</th>
+            <th>{{ row.POS_TYPE_CODE }}</th>
+            <th>{{ row.LOCATION_TYPE_NAME }}</th>
+            <th>{{ row.OPERATION_CODE }}</th>
+            <th>{{ row.OBU_ID }}</th>
+            <th>{{ row.STOCK_ID }}</th>
+            <th>{{ row.OBU_OL_STATUS_CODE }}</th>
+            <th>{{ row.OBU_OL_STATUS_NAME }}</th>
+            <th>{{ row.OPERATIONAL_STATUS }}</th>
+            <th>{{ row.OBU_OP_STATUS_NAME }}</th>
+            <th>{{ row.ORDER_DATA_ID }}</th>
+
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+  </div>
+  <button id="createXLSX">Export XLSX</button>
+</div>
+
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <td colspan = "4"><b style="color: #337ab7; float: left;">Overview of OBU actions for the last day.</b></td>  
+    <td><p style="float: right; padding-right: 10px;">Filter: <input id="myInput_2" type="text" placeholder="Search.." style="margin: 0px; width: auto; text-align: left; padding: 0px;"></p></td>
+    <br>
+    <td>
+      <div class="dropdown">
+        <button>Query</button>
+        <div class="dropdown-content"><p>
+          Select OBU_EH_ID, OBU_STOCK_ITEM_ID, OBU_SN, ACCOUNT_ID, ACCOUNT_NUMBER, ACCOUNT_TYPE_CODE, ACCOUNT_TYPE_NAME, POSTPAID_ACCOUNT_TYPE_CODE, POSTPAID_ACCOUNT_TYPE_NAME, CAST(FROM_TZ(CAST(CREATED_ON AS TIMESTAMP), 'GMT') AT TIME ZONE 'CET' AS DATE) as CREATED_ON, EXECUTED_BY APPLICATION_CODE, POS_ID, RETAIL_PARTNER_ABBR, POS_NUMBER, POS_TYPE_CODE, LOCATION_TYPE_NAME, OPERATION_CODE, OPERATION_NAME, OBU_ID, STOCK_ID, OBU_OL_STATUS_CODE, OBU_OL_STATUS_NAME, OPERATIONAL_STATUS, OBU_OP_STATUS_NAME, ORDER_DATA_ID from xosa.CIS_OL_OBU_EVENT where CREATED_ON > trunc(sysdate,'DD')- (2 / 24) order by CREATED_ON desc;
+                        </p>
+        </div>
+      </div>
+    </td>
+      <table id="tab2" class="table table-hover " style="  white-space: nowrap; border: ridge;">
+        <thead>
+        <tr style="background-color: darkgrey;">
+          <th>Link OBU</th>
+          <th>OBU_EH_ID</th>
+          <th>OBU_STOCK_ITEM_ID</th>
+          <th>CREATED_ON</th>
+          <th>OBU_SN</th>
+          <th>OPERATION_NAME</th>
+          <th>ACCOUNT_ID</th>
+          <th>ACCOUNT_NUMBER</th>
+          <th>ACCOUNT_TYPE_CODE</th>
+          <th>ACCOUNT_TYPE_NAME</th>
+          <th>POSTPAID_ACCOUNT_TYPE_CODE</th>
+          <th>POSTPAID_ACCOUNT_TYPE_NAME</th>
+          <th>EXECUTED_BY</th>
+          <th>APPLICATION_CODE</th>
+          <th>POS_ID</th>
+          <th>RETAIL_PARTNER_ABBR</th>
+          <th>POS_NUMBER</th>
+          <th>POS_TYPE_CODE</th>
+          <th>LOCATION_TYPE_NAME</th>
+          <th>OPERATION_CODE</th>
+          <th>OBU_ID</th>
+          <th>STOCK_ID</th>
+          <th>OBU_OL_STATUS_CODE</th>
+          <th>OBU_OL_STATUS_NAME</th>
+          <th>OPERATIONAL_STATUS</th>
+          <th>OBU_OP_STATUS_NAME</th>
+          <th>ORDER_DATA_ID</th>
+
+        </tr></thead>
+        <tbody >
+          {% for row in sql_event %}
+
+          <tr align="center">
+            <th ><a href="https://cis-host.internal.example.com/obu-logistic/obu/detail/?id={{row.OBU_STOCK_ITEM_ID}}" target="_blank"> <i style='color: forestgreen;'>OBU Detail {{row.OBU_STOCK_ITEM_ID}} </i></a></th>   
+            <th>{{ row.OBU_EH_ID }}</th>
+            <th>{{ row.OBU_STOCK_ITEM_ID }}</th>
+            <th style="color: #337ab7">{{ row.CREATED_ON|date:"d-m-Y G:i:s" }}</th>
+            <th>{{ row.OBU_SN }}</th>
+            <th>{{ row.OPERATION_NAME }}</th>
+            <th>{{ row.ACCOUNT_ID }}</th>
+            <th>{{ row.ACCOUNT_NUMBER }}</th>
+            <th>{{ row.ACCOUNT_TYPE_CODE }}</th>
+            <th>{{ row.ACCOUNT_TYPE_NAME }}</th>
+            <th>{{ row.POSTPAID_ACCOUNT_TYPE_CODE }}</th>
+            <th>{{ row.POSTPAID_ACCOUNT_TYPE_NAME }}</th>
+            <th>{{ row.EXECUTED_BY }}</th>
+            <th>{{ row.APPLICATION_CODE }}</th>
+            <th>{{ row.POS_ID }}</th>
+            <th>{{ row.RETAIL_PARTNER_ABBR }}</th>
+            <th>{{ row.POS_NUMBER }}</th>
+            <th>{{ row.POS_TYPE_CODE }}</th>
+            <th>{{ row.LOCATION_TYPE_NAME }}</th>
+            <th>{{ row.OPERATION_CODE }}</th>
+            <th>{{ row.OPERATION_NAME }}</th>
+            <th>{{ row.OBU_ID }}</th>
+            <th>{{ row.STOCK_ID }}</th>
+            <th>{{ row.OBU_OL_STATUS_CODE }}</th>
+            <th>{{ row.OBU_OL_STATUS_NAME }}</th>
+            <th>{{ row.OPERATIONAL_STATUS }}</th>
+            <th>{{ row.OBU_OP_STATUS_NAME }}</th>
+            <th>{{ row.ORDER_DATA_ID }}</th>
+
+          {% endfor %}
+
+        </tr>
+      </tbody> 
+      </table>
+  </div>
+  <button id="createXLSX_2">Export XLSX</button>
+  
+</div>
+
+
+    <script type="text/javascript">
+      $('#picker').datetimepicker({
+  format: 'DD-MM-YYYY HH:mm:ss'
+    });
+    $('#picker2').datetimepicker({
+      format: 'DD-MM-YYYY HH:mm:ss'
+    });
+  </script>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput_1").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab1 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    $("#myInput_2").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#tab2 tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+  
+  // export excel 
+  var btn = document.getElementById("createXLSX");
+  var fileName = "export_obu_error";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab1");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName + "." + (fileType || "xlsx"));
+  });
+  
+  var btn = document.getElementById("createXLSX_2");
+  var fileName1 = "export_obu";
+  var fileType = "xlsx";
+  btn.addEventListener("click", function() {
+    var table = document.getElementById("tab2");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Sheet JS"});
+    return XLSX.writeFile(wb, null || fileName1 + "." + (fileType || "xlsx"));
+  });
+  </script>
+
+{% endblock %}

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    {% load static %}
+    {% block head %}
+    <meta charset="utf-8">
+
+    <title>TPP</title>
+    <!-- <link rel="icon" href="" type="image/x-icon"> -->
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+    <meta name="author" content="Milos User">
+    <meta name="keywords" content="SEM, Django, Python, WebApp">
+    <meta name="description" content="Creating a application using Python-Django">
+    <!-- <meta http-equiv="refresh" content="240"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/tablesorter.css' %}">
+
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/graph.js' %}"></script>
+
+    <script src="{% static 'js/my_table_sortable.js' %}"></script>
+
+    <!-- bootstrap-datetimepicker -->
+    <script src="{% static 'datetimepicker/jquery.js' %}"></script>
+    <!-- <script src="{% static 'datetimepicker/moment-with-locales.min.js' %}" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+    <script src="{% static 'datetimepicker/moment-with-locales.min.js' %}"></script>
+    <script src="{% static 'datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'datetimepicker/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'datetimepicker/bootstrap-datetimepicker.min.css' %}">
+
+    <!-- jquery_tab_sort -->
+    <!-- <script src="{% static 'js/jquery_tab_sort/3.3.1_jquery.min.js' %}"></script> -->
+    <script src="{% static 'js/jquery_tab_sort/query_tablesorter.js' %}"></script>
+
+    <!-- jquery_export_excel -->
+    <script src="{% static 'js/export_xlsx.js' %}"></script>
+
+
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- <script type="text/javascript" src="{% static 'weblog_app/livesearch.js' %}"></script> -->
+    <!-- <style type="text/css">
+                #livesearch
+                {
+                    margin: 0px;
+                    width: 194px;
+                    background-color: white;
+                    color: black;
+                    position: absolute;
+                    
+                }
+                #txt1
+                {
+                    margin: 0px;
+                    /* color: red; */
+                }
+               
+        </style> -->
+
+
+    {% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="background-color:rgb(10, 84, 157); /*border-color: greenyellow;*/ margin-bottom: 0px;">
+        <div class="container">
+          <div class="navbar-header" style="margin-top: 14px;">
+            <a href="{% url 'work:preface' %}" style="
+                margin-right: 0px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+                background-color: transparent;
+                background-image: none;
+                border: 1px solid transparent;
+                border-radius: 4px;
+                margin-left: 10px;">
+                <img src="{% static '/img/header-logo.png' %}" alt="logo_ems" style="width: 53px; height: auto; padding-bottom: 16px;">
+              </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                          <span class="sr-only">Toggle navigation</span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                      </button>
+          </div>
+
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              
+              <li><a href="{% url 'work:ems_logs'  %}" >Logs</a></li>
+              <li><a href="{% url 'work:dwh' %}">DWH</a></li>
+              <!-- <li><a href="{% url 'work:paywell' %}">Paywell</a></li> -->
+              <li><a href="{% url 'work:reports_View' %}">Reports</a></li>
+              <li><a href="{% url 'work:pos' %}">Pos/User</a></li>
+              <li><a href="{% url 'work:jobs_ems' %}">Jobs</a></li>
+              <li><a href="{% url 'work:EMS_bad_trans' %}">Transakce</a></li>
+              <li><a href="{% url 'work:validation' %}">Validation</a></li>
+
+              <li>
+                <div class="dropdown" style="margin-top: 7px;">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Query
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu" style="text-align: center; ">
+                        <li><a href="{% url 'work:cisdb' %}">CIS_DB</a></li>
+                        <li><a href="{% url 'work:dwhdb' %}">DWH_DB</a></li>
+                    </ul>
+                </div>
+              </li>
+              
+                <li>
+                
+                <div class="dropdown" style="margin-top: 7px; margin-left: 5px">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Profil: {{request.user.username}}
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu" style="text-align: center;">
+                        <!-- { if user.is_staff is True }
+                        <li><a href="/admin/" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> Admin</a></li>
+                         <li><a href="{ url 'userprofile'}"><span class="glyphicon glyphicon-user"></span> Profil</a></li>
+                        <li><a href="{ url 'logout' }"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li> -->
+                        <!--{ endif } -->
+                        {% if user.is_authenticated %}
+                        {% comment %} <li><a href="{% url 'work:profil' %}"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                              </svg>
+                            Settings </a></li> {% endcomment %}
+                        <li><a href="{% url 'work:signout' %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                        
+                        {% else %}
+                        <li><a href="{% url 'work:signin' %}" target="_blank"><span class="glyphicon glyphicon-eye-open"></span>Login</a></li>
+                        <!-- <li><a href="/admin/" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> Admin</a> -->
+                        
+                            {% endif %}
+                        </div>
+                        </li>
+                        <!-- <li><a href="{ url 'register' }"><span class="glyphicon glyphicon-plus-sign"></span> Sign Up</a>
+                        </li>-->
+                    
+                    </ul>
+                  </div> 
+                </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+    
+    <style>
+
+        .spinner-border,.spinner-grow{display:inline-block;width:var(--bs-spinner-width);height:var(--bs-spinner-height);vertical-align:var(--bs-spinner-vertical-align);border-radius:50%;animation:var(--bs-spinner-animation-speed) linear infinite var(--bs-spinner-animation-name)}@keyframes spinner-border{to{transform:rotate(360deg)}}.spinner-border{--bs-spinner-width:2rem;--bs-spinner-height:2rem;--bs-spinner-vertical-align:-0.125em;--bs-spinner-border-width:0.25em;--bs-spinner-animation-speed:0.75s;--bs-spinner-animation-name:spinner-border;border:var(--bs-spinner-border-width) solid currentcolor;border-right-color:transparent}.spinner-border-sm{--bs-spinner-width:1rem;--bs-spinner-height:1rem;--bs-spinner-border-width:0.2em}@keyframes spinner-grow{0%{transform:scale(0)}50%{opacity:1;transform:none}}.spinner-grow{--bs-spinner-width:2rem;--bs-spinner-height:2rem;--bs-spinner-vertical-align:-0.125em;--bs-spinner-animation-speed:0.75s;--bs-spinner-animation-name:spinner-grow;background-color:currentcolor;opacity:0}.spinner-grow-sm{--bs-spinner-width:1rem;--bs-spinner-height:1rem}@media (prefers-reduced-motion:reduce){.spinner-border,.spinner-grow{--bs-spinner-animation-speed:1.5s}}
+        .not-visible{
+            display: none;
+        }
+    </style>
+    
+    <div id='spinner-box' class="text-center mt-3 " style="
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        color: white;
+                        /* background: #666666; */
+                        opacity: .8;
+                        z-index: 1000;">
+        <div class="spinner-border text-primary" role="status"></div> 
+    </div>
+
+    
+
+    {% for message in messages %}
+<div class="alert alert-danger" style="text-align:center" role="alert">
+    {{message}}
+</div>
+
+  
+
+{% endfor %}
+
+    {% block body %}
+
+    <hr>
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">DB</th>
+            <th scope="col">Name</th>
+            <th scope="col">Password</th>
+            <th scope="col">Hostname</th>
+            <th scope="col">Port</th>
+            <th scope="col">Servicename</th>
+            <th scope="col">Update</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <!-- <form style="text-align: center; padding: 0px;" action="" method="POST" enctype="multipart/form-data"> -->
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+            <th>BILL DB</th>
+            <td>{{form_bill.BILLDB_username}}</td>
+            <td id="pass1" type="password" value="FakePSW"  >{{form_bill.BILLDB_password}}
+                <button type="button" class="btn btn-primary" onclick="togglePasswordVisibility()">Show Password</button>
+            </td>
+            <td>{{form_bill.BILLDB_hostname}}</td>
+            <td>{{form_bill.BILLDB_port}}</td>
+            <td>{{form_bill.BILLDB_servicename}}</td>
+            <td><input style="text-align: center;" type="submit" value="Save"></td>
+            </form>
+          </tr>
+
+          <tr>
+            <!-- <form style="text-align: center; padding: 0px;" action="" method="POST" enctype="multipart/form-data"> -->
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+            <th>DWH DB</th>
+            <td>{{form_ems_dwh.EMS_DWHDB_username}}</td>
+            <td id="pass1" type="password" value="FakePSW"  >{{form_ems_dwh.EMS_DWHDB_password}}
+                <button type="button" class="btn btn-primary" onclick="PasswordVisibility()">Show Password</button>
+            </td>
+            <td>{{form_ems_dwh.EMS_DWHDB_hostname}}</td>
+            <td>{{form_ems_dwh.EMS_DWHDB_port}}</td>
+            <td>{{form_ems_dwh.EMS_DWHDB_servicename}}</td>
+            <td><input style="text-align: center;" type="submit" value="Save"></td>
+            </form>
+          </tr>
+        </tbody>
+      </table>
+
+      <script>
+            function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('BILLDB_password');
+            const showPasswordCheckbox = document.getElementById('id_show_password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.innerText = 'Hide Password';
+            } else {
+                passwordInput.type = 'password';
+                this.innerText = 'Show Password';
+            }
+            showPasswordCheckbox.value = !showPasswordCheckbox.value;
+        }
+    </script>
+    <script>
+        function PasswordVisibility() {
+        const passwordInput = document.getElementById('EMS_DWHDB_password');
+        const showPasswordCheckbox = document.getElementById('id_show_password');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            this.innerText = 'Hide Password';
+        } else {
+            passwordInput.type = 'password';
+            this.innerText = 'Show Password';
+        }
+        showPasswordCheckbox.value = !showPasswordCheckbox.value;
+    }
+</script>
+      
+
+ 
+    {% endblock %}
+
+
+    <script>
+        $("#tab1").tablesorter();
+    </script>
+    <script>
+        $("#tab2").tablesorter();
+    </script>
+    <script>
+            $("#tab2").tablesorter();
+    </script>
+
+    <script>
+        console.log("author: user@example.com")
+
+        const spinnrBox = document.getElementById('spinner-box')
+
+        
+        // $.ajax({
+        //     type: 'GET', 
+        //     success: function(response){
+        //         spinnrBox.classList.add('not-visible')
+        //         console.log('response', response)
+        //     },
+        //     error: function(error){
+        //         console.log(error)
+        //     }
+        // })
+
+        $(window).show(200, function() {
+  $("#spinner-box").fadeOut(1750);
+});
+
+    </script>
+
+
+    
+
+</body>

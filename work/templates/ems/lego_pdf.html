@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
+
+
+<table>
+    <thead>
+      <tr>
+        <th>Vlastník:</th>
+        <th>Mesiac prejazdu mýtneho úseku</th>
+        <th>2023/11</th>
+        <th>2023/12</th>
+        <th>2024/01</th>
+        <th>Celková suma:</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in myvar %}
+        {% if forloop.first %}
+          <tr>
+            <td rowspan="{{ myvar|length }}">{{ row.OWNER_NAME }}</td>
+            <td>ACCOUNTPRODUCTID</td>
+            <td>SPOLU</td>
+            <td>SPOLU</td>
+            <td>SPOLU</td>
+            <td>Celková suma:</td>
+          </tr>
+        {% endif %}
+        <tr>
+          <td>{{ row.ACCOUNTPRODUCTID }}</td>
+          <td>{% if row.TRANSACTION_ARRIVAL_MONTH == "2023-11-01 00:00:00" %}{{ row.SPOLU }}{% endif %}</td>
+          <td>{% if row.TRANSACTION_ARRIVAL_MONTH == "2023-12-01 00:00:00" %}{{ row.SPOLU }}{% endif %}</td>
+          <td>{% if row.TRANSACTION_ARRIVAL_MONTH == "2024-01-01 00:00:00" %}{{ row.SPOLU }}{% endif %}</td>
+          <td>{% if forloop.last %}{{ row.SPOLU }}{% endif %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html> 
